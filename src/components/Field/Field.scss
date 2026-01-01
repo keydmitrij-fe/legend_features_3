@@ -1,0 +1,21 @@
+.field {
+  display: grid;
+  grid-template-columns: 280px auto;
+  align-items: center;
+  column-gap: 15px;
+
+  &-input {
+    max-width: 280px;
+    height: 50px;
+    padding-inline: 5px;
+    font-weight: 600;
+    border: none;
+    border-bottom: 2px solid #dde0e5;
+    background-color: transparent;
+  }
+
+  &-button {
+    padding: 17px 60px;
+    border-radius: 10px;
+  }
+} 
