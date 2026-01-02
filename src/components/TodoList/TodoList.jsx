@@ -1,13 +1,24 @@
 import React from 'react';
 import './TodoList.scss';
-import TodoItem from '../TodoItem/index.jsx';
+import TodoItem from '../TodoItem';
 
-const TodoList = () => {
+const TodoList = (props) => {
+  // eslint-disable-next-line react/prop-types
+  const { tasksData, updateTask, deleteTask } = props;
+
   return (
     <ul className={'todo__list list'}>
-      <TodoItem />
-      <TodoItem />
-      <TodoItem />
+      {/* eslint-disable-next-line react/prop-types */}
+      {tasksData.map((task) => (
+        <TodoItem
+          key={task.id}
+          id={task.id}
+          title={task.title}
+          isDone={task.isDone}
+          deleteTask={deleteTask}
+          updateTask={updateTask}
+        />
+      ))}
     </ul>
   );
 };

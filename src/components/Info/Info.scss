@@ -11,4 +11,12 @@
   font-weight: 600;
   list-style: none;
   color: #abaeb3;
+
+  & li {
+    cursor: pointer;
+  }
+
+  & li.active {
+    color: #5492ff;
+  }
 } 

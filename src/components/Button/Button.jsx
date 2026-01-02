@@ -3,10 +3,10 @@ import './Button.scss';
 
 const Button = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { className = '', type = 'button', children } = props;
+  const { className = '', type = 'button', children, ...rest } = props;
 
   return (
-    <button className={`button ${className}`} type={type}>
+    <button className={`button ${className}`} type={type} {...rest}>
       {children}
     </button>
   );
