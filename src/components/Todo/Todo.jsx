@@ -33,8 +33,6 @@ const Todo = () => {
     fetch(`https://easydev.club/api/v1/todos?filter=${status}`)
       .then((response) => response.json())
       .then((filterData) => setTasks(filterData.data));
-
-    renderTasksInfo();
   }, []);
 
   const updateTask = (id, title, isChecked) => {
@@ -43,6 +41,7 @@ const Todo = () => {
       body: JSON.stringify({ isDone: isChecked, title: title }),
     }).then(() => {
       filterTask(activeStatus);
+      renderTasksInfo();
     });
   };
 
@@ -69,7 +68,7 @@ const Todo = () => {
       fetch(`https://easydev.club/api/v1/todos/${id}`, {
         method: 'DELETE',
       }).then(() => {
-        renderTasks();
+        filterTask(activeStatus);
         renderTasksInfo();
       });
     }
