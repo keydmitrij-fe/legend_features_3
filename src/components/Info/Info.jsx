@@ -3,39 +3,50 @@ import './Info.scss';
 
 const Info = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { tasksAmount, onFilterTask, activeStatus, setActiveStatus } = props;
+  const { info, status, setStatus } = props;
+
+  async function handleClick(status) {
+    switch (status) {
+      case 'all':
+        setStatus('all');
+        break;
+      case 'inWork':
+        setStatus('inWork');
+        break;
+      case 'completed':
+        setStatus('completed');
+        break;
+    }
+  }
 
   return (
     <ul className={'todo__info info'}>
       <li
-        className={`info__all ${activeStatus === 'all' ? 'active' : ''}`}
+        className={`info__all ${status === 'all' ? 'active' : ''}`}
         onClick={() => {
-          setActiveStatus('all');
-          onFilterTask('all');
+          handleClick('all');
         }}
       >
         {/* eslint-disable-next-line react/prop-types */}
-        Все ({tasksAmount.all})
+        Все ({info.all})
       </li>
       <li
-        className={`info__in-work ${activeStatus === 'inWork' ? 'active' : ''}`}
+        className={`info__in-work ${status === 'inWork' ? 'active' : ''}`}
         onClick={() => {
-          setActiveStatus('inWork');
-          onFilterTask('inWork');
-        }}
-      >
-        {/* eslint-disable-next-line react/prop-types */}В работе (
-        {tasksAmount.inWork})
-      </li>
-      <li
-        className={`info__completed ${activeStatus === 'completed' ? 'active' : ''}`}
-        onClick={() => {
-          setActiveStatus('completed');
-          onFilterTask('completed');
+          handleClick('inWork');
         }}
       >
         {/* eslint-disable-next-line react/prop-types */}
-        Сделано ({tasksAmount.completed})
+        {}В работе ({info.inWork})
+      </li>
+      <li
+        className={`info__completed ${status === 'completed' ? 'active' : ''}`}
+        onClick={() => {
+          handleClick('completed');
+        }}
+      >
+        {/* eslint-disable-next-line react/prop-types */}
+        Сделано ({info.completed})
       </li>
     </ul>
   );

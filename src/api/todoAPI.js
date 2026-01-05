@@ -1,0 +1,46 @@
+const API = 'https://easydev.club/api/v1/todos';
+
+export async function fetchUpdateTasks(status) {
+  const response = await fetch(`${API}?filter=${status}`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch tasks');
+  }
+
+  return data;
+}
+
+export async function addTask(title) {
+  const response = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isDone: false, title }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error adding a task');
+  }
+}
+
+export async function deleteTask(id) {
+  const response = await fetch(`${API}/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Error when deleting task');
+  }
+}
+
+export async function editTask(id, title, isDone) {
+  const response = await fetch(`${API}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isDone, title }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error editing task');
+  }
+}

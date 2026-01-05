@@ -3,73 +3,81 @@ import './TodoItem.scss';
 import Button from '../Button';
 import DeleteIcon from '../../assets/icons/delete-icon.svg';
 import EditIcon from '../../assets/icons/edit-icon.svg';
+import { deleteTask, editTask } from '../../api/todoAPI';
 
 const TodoItem = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { id, title, isDone, updateTask, deleteTask } = props;
+  const { id, title, isDone, updateTasks } = props;
 
-  const [editTitle, setEditTitle] = useState(title);
+  const [checkedTask, setCheckedTask] = useState(isDone);
   const [isEdit, setIsEdit] = useState(false);
-  const [isChecked, setIsChecked] = useState(isDone);
-  const [editTitleError, setEditTitleError] = useState('');
+  const [editInputValue, setEditInputValue] = useState(title);
+  const [editInputError, setEditInputError] = useState('');
 
-  const handleCheckboxChange = () => {
-    setIsChecked((prevState) => {
-      updateTask(id, title, !prevState);
-      return !isChecked;
-    });
-  };
+  async function handleDeleteTask() {
+    await deleteTask(id);
+    updateTasks();
+  }
 
-  const handleChange = (event) => {
-    setEditTitleError('');
-    setEditTitle(event.target.value);
-  };
+  async function handleCheckedTask() {
+    setCheckedTask((prevState) => !prevState);
+    await editTask(id, title, !checkedTask);
+    updateTasks();
+  }
 
-  const validationEditValue = () => {
-    if (editTitle.trim().length === 0) {
-      setEditTitleError('Это поле не может быть пустым');
+  function handleChange(event) {
+    setEditInputValue(event.target.value);
+    setEditInputError('');
+  }
+
+  async function handleSaveNewTitle() {
+    if (editInputValue.length === 0) {
+      setEditInputError('Это поле не может быть пустым');
       return;
     }
 
-    if (editTitle.trim().length === 1) {
-      setEditTitleError('Минимальная длина текста 2 символа');
+    if (editInputValue.length < 2) {
+      setEditInputError('Минимальная длина текста 2 символа');
       return;
     }
 
-    if (editTitle.trim().length > 64) {
-      setEditTitleError('Максимальная длина текста 64 символа');
+    if (editInputValue.length > 64) {
+      setEditInputError('Максимальная длина текста 64 символа');
       return;
     }
 
-    updateTask(id, editTitle, isDone);
+    await editTask(id, editInputValue, isDone);
     setIsEdit(false);
-  };
+    updateTasks();
+  }
 
   return isEdit ? (
-    <li className={'item'}>
+    <li className={'todo__item item'}>
+      {editInputError && (
+        <span className={'item__edit-error'}>{editInputError}</span>
+      )}
+      <label className={'visually-hidden'} htmlFor={id}></label>
       <input
-        className={`item__edit-field ${editTitleError ? 'is-invalid' : ''}`}
+        className={`item__edit-field ${editInputError ? 'is-invalid' : ''}`}
         type="text"
-        value={editTitle}
+        value={editInputValue}
         onChange={handleChange}
       />
-      {editTitleError && (
-        <span className={'item__edit-error'}>{editTitleError}</span>
-      )}
-      <button
+      <Button
         className={'item__edit-button-save button'}
-        type="button"
-        onClick={validationEditValue}
+        onClick={handleSaveNewTitle}
       >
         Save
-      </button>
-      <button
+      </Button>
+      <Button
         className={'item__edit-button-cancel button'}
-        type="button"
-        onClick={() => setIsEdit(false)}
+        onClick={() => {
+          setIsEdit(false);
+          setEditInputValue(title);
+        }}
       >
         Cancel
-      </button>
+      </Button>
     </li>
   ) : (
     <li className={'todo__item item'}>
@@ -77,10 +85,8 @@ const TodoItem = (props) => {
         className={'item__checkbox'}
         id={id}
         type="checkbox"
-        checked={isChecked}
-        onChange={() => {
-          handleCheckboxChange();
-        }}
+        checked={checkedTask}
+        onChange={handleCheckedTask}
       />
       <label className={'item__label'} htmlFor={id}>
         {title}
@@ -95,7 +101,7 @@ const TodoItem = (props) => {
           title={'Edit task'}
         />
       </Button>
-      <Button className={'item__button-delete'} onClick={() => deleteTask(id)}>
+      <Button className={'item__button-delete'} onClick={handleDeleteTask}>
         <img
           src={DeleteIcon}
           alt=""

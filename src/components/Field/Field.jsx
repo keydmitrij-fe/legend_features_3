@@ -1,47 +1,47 @@
 import React, { useRef, useState } from 'react';
 import './Field.scss';
 import Button from '../Button/index.jsx';
+import { addTask } from '../../api/todoAPI';
 
 const Field = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { addTask } = props;
+  const { updateTasks } = props;
 
   const [fieldValue, setFieldValue] = useState('');
   const [fieldError, setFieldError] = useState('');
 
   const fieldRef = useRef();
 
-  const handleChange = (event) => {
+  function handleChange(event) {
+    setFieldValue(event.target.value);
     setFieldError('');
-    const title = event.target.value;
+  }
 
-    setFieldValue(title);
-  };
-
-  const validationField = (title) => {
-    if (title.trim().length === 0) {
+  async function handleAddTask() {
+    if (fieldValue.length === 0) {
       setFieldError('Это поле не может быть пустым');
       return;
     }
 
-    if (title.trim().length === 1) {
+    if (fieldValue.length < 2) {
       setFieldError('Минимальная длина текста 2 символа');
       return;
     }
 
-    if (title.trim().length > 64) {
+    if (fieldValue.length > 64) {
       setFieldError('Максимальная длина текста 64 символа');
       return;
     }
 
-    setFieldError('');
-    addTask(fieldValue);
+    await addTask(fieldValue);
+    updateTasks();
     setFieldValue('');
     fieldRef.current.focus();
-  };
+  }
 
   return (
     <form className={'todo__field field'}>
+      {fieldError && <span className={'field__error'}>{fieldError}</span>}
       <label className={'visually-hidden'} htmlFor="field"></label>
       <input
         className={`todo__field-input field-input  ${fieldError ? 'is-invalid' : ''}`}
@@ -53,10 +53,9 @@ const Field = (props) => {
         onChange={handleChange}
         ref={fieldRef}
       />
-      {fieldError && <span className="field__error">{fieldError}</span>}
       <Button
         className={'todo__field-button field-button'}
-        onClick={() => validationField(fieldValue)}
+        onClick={handleAddTask}
       >
         Add
       </Button>
