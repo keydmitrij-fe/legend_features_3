@@ -58,7 +58,6 @@ const TodoItem = (props) => {
       {editInputError && (
         <span className={'item__edit-error'}>{editInputError}</span>
       )}
-      <label className={'visually-hidden'} htmlFor={id}></label>
       <input
         className={`item__edit-field ${editInputError ? 'is-invalid' : ''}`}
         type="text"

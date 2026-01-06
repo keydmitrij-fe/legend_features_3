@@ -42,10 +42,8 @@ const Field = (props) => {
   return (
     <form className={'todo__field field'}>
       {fieldError && <span className={'field__error'}>{fieldError}</span>}
-      <label className={'visually-hidden'} htmlFor="field"></label>
       <input
         className={`todo__field-input field-input  ${fieldError ? 'is-invalid' : ''}`}
-        id={'field'}
         type="text"
         autoComplete={'off'}
         placeholder={'Task To Be Done...'}
