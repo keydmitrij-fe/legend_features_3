@@ -22,7 +22,7 @@ const TodoItem = (props) => {
   async function handleCheckedTask() {
     setCheckedTask((prevState) => !prevState);
 
-    await editTodo(id, { title, checkedTask: !checkedTask });
+    await editTodo(id, { title, isDone: !checkedTask });
 
     updateTasks();
   }

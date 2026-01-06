@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import './Todo.scss';
-import Field from '../Field';
-import Info from '../Info';
-import TodoList from '../TodoList';
+import './TodoPage.scss';
+import Field from '../../components/Field';
+import Info from '../../components/Info';
+import TodoList from '../../components/TodoList';
 import { getTodo } from '../../api/todoAPI';
 
-const Todo = () => {
+const TodoPage = () => {
   const [tasksData, setTasksData] = useState({
     data: [],
     info: {},
@@ -39,4 +39,4 @@ const Todo = () => {
   );
 };
 
-export default Todo;
+export default TodoPage;

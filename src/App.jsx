@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.scss';
-import Todo from './components/Todo';
+import TodoPage from './pages/TodoPage';
 
 function App() {
-  return <Todo></Todo>;
+  return <TodoPage></TodoPage>;
 }
 
 export default App;
