@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './TodoPage.scss';
-import Field from '../../components/Field';
+import TodoTitle from '../../components/TodoTitle';
 import Info from '../../components/Info';
 import TodoList from '../../components/TodoList';
 import { getTodo } from '../../api/todoAPI';
@@ -27,7 +27,7 @@ const TodoPage = () => {
 
   return (
     <div className="todo">
-      <Field updateTasks={updateTasks} />
+      <TodoTitle updateTasks={updateTasks} />
       <Info
         info={tasksData.info}
         status={activeStatus}
