@@ -33,11 +33,11 @@ export async function deleteTodo(id) {
   }
 }
 
-export async function editTodo(id, title, isDone) {
+export async function editTodo(id, editedTodo) {
   const response = await fetch(`${API}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ isDone, title }),
+    body: JSON.stringify(editedTodo),
   });
 
   if (!response.ok) {

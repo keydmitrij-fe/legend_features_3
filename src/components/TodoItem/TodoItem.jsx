@@ -21,7 +21,9 @@ const TodoItem = (props) => {
 
   async function handleCheckedTask() {
     setCheckedTask((prevState) => !prevState);
-    await editTodo(id, title, !checkedTask);
+
+    await editTodo(id, { title, checkedTask: !checkedTask });
+
     updateTasks();
   }
 
@@ -46,7 +48,7 @@ const TodoItem = (props) => {
       return;
     }
 
-    await editTodo(id, editInputValue, isDone);
+    await editTodo(id, { editInputValue, isDone });
     setIsEdit(false);
     updateTasks();
   }
