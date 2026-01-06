@@ -1,60 +1,37 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import './TodoTitle.scss';
-import Button from '../Button/index.jsx';
+import Button from '../Button';
 import { addTodo } from '../../api/todoAPI';
 
 const TodoTitle = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { updateTasks } = props;
+  const { updateTasks, validationInput, error } = props;
 
-  const [title, setTitle] = useState('');
-  const [error, setError] = useState('');
+  const titleRef = useRef();
 
-  const fieldRef = useRef();
+  async function handleSubmit(event) {
+    event.preventDefault();
 
-  function handleChange(event) {
-    setTitle(event.target.value);
-    setError('');
-  }
+    const title = titleRef.current.value.trim();
 
-  async function handleaddTodo() {
-    if (title.trim().length === 0) {
-      setError('Это поле не может быть пустым');
-      return;
+    if (validationInput(title)) {
+      await addTodo(title);
+      updateTasks();
+      titleRef.current.value = '';
     }
-
-    if (title.trim().length < 2) {
-      setError('Минимальная длина текста 2 символа');
-      return;
-    }
-
-    if (title.trim().length > 64) {
-      setError('Максимальная длина текста 64 символа');
-      return;
-    }
-
-    await addTodo(title);
-    updateTasks();
-    setTitle('');
-    fieldRef.current.focus();
   }
 
   return (
-    <form className={'todo__field field'}>
+    <form className={'todo__field field'} onSubmit={handleSubmit}>
       {error && <span className={'field__error'}>{error}</span>}
       <input
         className={`todo__field-input field-input  ${error ? 'is-invalid' : ''}`}
         type="text"
         autoComplete={'off'}
         placeholder={'Task To Be Done...'}
-        value={title}
-        onChange={handleChange}
-        ref={fieldRef}
+        ref={titleRef}
       />
-      <Button
-        className={'todo__field-button field-button'}
-        onClick={handleaddTodo}
-      >
+      <Button className={'todo__field-button field-button'} type={'submit'}>
         Add
       </Button>
     </form>
