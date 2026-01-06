@@ -1,30 +1,16 @@
 import React from 'react';
-import './Info.scss';
+import './TodoInfo.scss';
 
-const Info = (props) => {
+const TodoInfo = (props) => {
   // eslint-disable-next-line react/prop-types
   const { info, status, setStatus } = props;
-
-  async function handleClick(status) {
-    switch (status) {
-      case 'all':
-        setStatus('all');
-        break;
-      case 'inWork':
-        setStatus('inWork');
-        break;
-      case 'completed':
-        setStatus('completed');
-        break;
-    }
-  }
 
   return (
     <ul className={'todo__info info'}>
       <li
         className={`info__all ${status === 'all' ? 'active' : ''}`}
         onClick={() => {
-          handleClick('all');
+          setStatus('all');
         }}
       >
         {/* eslint-disable-next-line react/prop-types */}
@@ -33,7 +19,7 @@ const Info = (props) => {
       <li
         className={`info__in-work ${status === 'inWork' ? 'active' : ''}`}
         onClick={() => {
-          handleClick('inWork');
+          setStatus('inWork');
         }}
       >
         {/* eslint-disable-next-line react/prop-types */}
@@ -42,7 +28,7 @@ const Info = (props) => {
       <li
         className={`info__completed ${status === 'completed' ? 'active' : ''}`}
         onClick={() => {
-          handleClick('completed');
+          setStatus('completed');
         }}
       >
         {/* eslint-disable-next-line react/prop-types */}
@@ -52,4 +38,4 @@ const Info = (props) => {
   );
 };
 
-export default Info;
+export default TodoInfo;

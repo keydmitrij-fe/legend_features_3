@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './TodoPage.scss';
 import TodoTitle from '../../components/TodoTitle';
-import Info from '../../components/Info';
+import TodoInfo from '../../components/TodoInfo';
 import TodoList from '../../components/TodoList';
 import { getTodo } from '../../api/todoAPI';
 
@@ -55,7 +55,7 @@ const TodoPage = () => {
         validationInput={validationInput}
         error={error}
       />
-      <Info
+      <TodoInfo
         info={tasksData.info}
         status={activeStatus}
         setStatus={setActiveStatus}
