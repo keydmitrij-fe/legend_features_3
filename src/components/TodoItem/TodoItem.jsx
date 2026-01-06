@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './TodoItem.scss';
-import Button from '../Button';
+import Button from '../../ui/Button';
 import DeleteIcon from '../../assets/icons/delete-icon.svg';
 import EditIcon from '../../assets/icons/edit-icon.svg';
 import { deleteTodo, editTodo } from '../../api/todoAPI';

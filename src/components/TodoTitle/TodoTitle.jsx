@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import './TodoTitle.scss';
-import Button from '../Button';
+import Button from '../../ui/Button';
 import { addTodo } from '../../api/todoAPI';
 
 const TodoTitle = (props) => {
