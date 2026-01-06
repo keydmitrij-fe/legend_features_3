@@ -5,7 +5,7 @@ import { addTodo } from '../../api/todoAPI';
 
 const TodoTitle = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { updateTasks, validationInput, error } = props;
+  const { updateTodo, validationInput, error } = props;
 
   const titleRef = useRef();
 
@@ -15,8 +15,13 @@ const TodoTitle = (props) => {
     const title = titleRef.current.value.trim();
 
     if (validationInput(title)) {
-      await addTodo(title);
-      updateTasks();
+      try {
+        await addTodo(title);
+      } catch (e) {
+        alert(e);
+      }
+
+      updateTodo();
       titleRef.current.value = '';
     }
   }

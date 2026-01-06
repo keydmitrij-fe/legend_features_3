@@ -15,17 +15,19 @@ const TodoPage = () => {
   const [error, setError] = useState('');
 
   function validationInput(title) {
-    if (title.trim().length === 0) {
+    const titleLength = title.trim().length;
+
+    if (titleLength === 0) {
       setError('Это поле не может быть пустым');
       return;
     }
 
-    if (title.trim().length < 2) {
+    if (titleLength < 2) {
       setError('Минимальная длина текста 2 символа');
       return;
     }
 
-    if (title.trim().length > 64) {
+    if (titleLength > 64) {
       setError('Максимальная длина текста 64 символа');
       return;
     }
@@ -34,10 +36,10 @@ const TodoPage = () => {
   }
 
   useEffect(() => {
-    updateTasks();
+    updateTodo();
   }, [activeStatus]);
 
-  async function updateTasks() {
+  async function updateTodo() {
     try {
       const tasksData = await getTodo(activeStatus);
       setTasksData({ data: tasksData.data, info: tasksData.info });
@@ -49,7 +51,7 @@ const TodoPage = () => {
   return (
     <div className="todo">
       <TodoTitle
-        updateTasks={updateTasks}
+        updateTodo={updateTodo}
         validationInput={validationInput}
         error={error}
       />
@@ -57,9 +59,9 @@ const TodoPage = () => {
         info={tasksData.info}
         status={activeStatus}
         setStatus={setActiveStatus}
-        updateTasks={updateTasks}
+        updateTodo={updateTodo}
       />
-      <TodoList tasks={tasksData.data} updateTasks={updateTasks} />
+      <TodoList tasks={tasksData.data} updateTodo={updateTodo} />
     </div>
   );
 };

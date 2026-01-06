@@ -4,7 +4,7 @@ import TodoItem from '../TodoItem';
 
 const TodoList = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { tasks, updateTasks } = props;
+  const { tasks, updateTodo } = props;
 
   return (
     <ul className={'todo__list list'}>
@@ -15,7 +15,7 @@ const TodoList = (props) => {
           id={task.id}
           title={task.title}
           isDone={task.isDone}
-          updateTasks={updateTasks}
+          updateTodo={updateTodo}
         />
       ))}
     </ul>

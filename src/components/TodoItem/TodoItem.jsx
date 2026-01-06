@@ -7,7 +7,7 @@ import { deleteTodo, editTodo } from '../../api/todoAPI';
 
 const TodoItem = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { id, title, isDone, updateTasks } = props;
+  const { id, title, isDone, updateTodo } = props;
 
   const [checkedTask, setCheckedTask] = useState(isDone);
   const [isEdit, setIsEdit] = useState(false);
@@ -16,7 +16,7 @@ const TodoItem = (props) => {
 
   async function handledeleteTodo() {
     await deleteTodo(id);
-    updateTasks();
+    updateTodo();
   }
 
   async function handleCheckedTask() {
@@ -24,7 +24,7 @@ const TodoItem = (props) => {
 
     await editTodo(id, { title, isDone: !checkedTask });
 
-    updateTasks();
+    updateTodo();
   }
 
   function handleChange(event) {
@@ -50,7 +50,7 @@ const TodoItem = (props) => {
 
     await editTodo(id, { editInputValue, isDone });
     setIsEdit(false);
-    updateTasks();
+    updateTodo();
   }
 
   return isEdit ? (
