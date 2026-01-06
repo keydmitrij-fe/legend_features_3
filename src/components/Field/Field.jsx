@@ -18,17 +18,17 @@ const Field = (props) => {
   }
 
   async function handleAddTask() {
-    if (fieldValue.length === 0) {
+    if (fieldValue.trim().length === 0) {
       setFieldError('Это поле не может быть пустым');
       return;
     }
 
-    if (fieldValue.length < 2) {
+    if (fieldValue.trim().length < 2) {
       setFieldError('Минимальная длина текста 2 символа');
       return;
     }
 
-    if (fieldValue.length > 64) {
+    if (fieldValue.trim().length > 64) {
       setFieldError('Максимальная длина текста 64 символа');
       return;
     }

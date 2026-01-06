@@ -31,17 +31,17 @@ const TodoItem = (props) => {
   }
 
   async function handleSaveNewTitle() {
-    if (editInputValue.length === 0) {
+    if (editInputValue.trim().length === 0) {
       setEditInputError('Это поле не может быть пустым');
       return;
     }
 
-    if (editInputValue.length < 2) {
+    if (editInputValue.trim().length < 2) {
       setEditInputError('Минимальная длина текста 2 символа');
       return;
     }
 
-    if (editInputValue.length > 64) {
+    if (editInputValue.trim().length > 64) {
       setEditInputError('Максимальная длина текста 64 символа');
       return;
     }
