@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import './Field.scss';
 import Button from '../Button/index.jsx';
-import { addTask } from '../../api/todoAPI';
+import { addTodo } from '../../api/todoAPI';
 
 const Field = (props) => {
   // eslint-disable-next-line react/prop-types
@@ -17,7 +17,7 @@ const Field = (props) => {
     setFieldError('');
   }
 
-  async function handleAddTask() {
+  async function handleaddTodo() {
     if (fieldValue.trim().length === 0) {
       setFieldError('Это поле не может быть пустым');
       return;
@@ -33,7 +33,7 @@ const Field = (props) => {
       return;
     }
 
-    await addTask(fieldValue);
+    await addTodo(fieldValue);
     updateTasks();
     setFieldValue('');
     fieldRef.current.focus();
@@ -55,7 +55,7 @@ const Field = (props) => {
       />
       <Button
         className={'todo__field-button field-button'}
-        onClick={handleAddTask}
+        onClick={handleaddTodo}
       >
         Add
       </Button>

@@ -3,7 +3,7 @@ import './Todo.scss';
 import Field from '../Field';
 import Info from '../Info';
 import TodoList from '../TodoList';
-import { fetchUpdateTasks } from '../../api/todoAPI';
+import { getTodo } from '../../api/todoAPI';
 
 const Todo = () => {
   const [tasksData, setTasksData] = useState({
@@ -18,7 +18,7 @@ const Todo = () => {
 
   async function updateTasks() {
     try {
-      const tasksData = await fetchUpdateTasks(activeStatus);
+      const tasksData = await getTodo(activeStatus);
       setTasksData({ data: tasksData.data, info: tasksData.info });
     } catch (e) {
       alert(e);

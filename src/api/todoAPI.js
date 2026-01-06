@@ -1,6 +1,6 @@
 const API = 'https://easydev.club/api/v1/todos';
 
-export async function fetchUpdateTasks(status) {
+export async function getTodo(status) {
   const response = await fetch(`${API}?filter=${status}`);
   const data = await response.json();
 
@@ -11,7 +11,7 @@ export async function fetchUpdateTasks(status) {
   return data;
 }
 
-export async function addTask(title) {
+export async function addTodo(title) {
   const response = await fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -23,7 +23,7 @@ export async function addTask(title) {
   }
 }
 
-export async function deleteTask(id) {
+export async function deleteTodo(id) {
   const response = await fetch(`${API}/${id}`, {
     method: 'DELETE',
   });
@@ -33,7 +33,7 @@ export async function deleteTask(id) {
   }
 }
 
-export async function editTask(id, title, isDone) {
+export async function editTodo(id, title, isDone) {
   const response = await fetch(`${API}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

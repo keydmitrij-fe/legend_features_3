@@ -3,7 +3,7 @@ import './TodoItem.scss';
 import Button from '../Button';
 import DeleteIcon from '../../assets/icons/delete-icon.svg';
 import EditIcon from '../../assets/icons/edit-icon.svg';
-import { deleteTask, editTask } from '../../api/todoAPI';
+import { deleteTodo, editTodo } from '../../api/todoAPI';
 
 const TodoItem = (props) => {
   // eslint-disable-next-line react/prop-types
@@ -14,14 +14,14 @@ const TodoItem = (props) => {
   const [editInputValue, setEditInputValue] = useState(title);
   const [editInputError, setEditInputError] = useState('');
 
-  async function handleDeleteTask() {
-    await deleteTask(id);
+  async function handledeleteTodo() {
+    await deleteTodo(id);
     updateTasks();
   }
 
   async function handleCheckedTask() {
     setCheckedTask((prevState) => !prevState);
-    await editTask(id, title, !checkedTask);
+    await editTodo(id, title, !checkedTask);
     updateTasks();
   }
 
@@ -46,7 +46,7 @@ const TodoItem = (props) => {
       return;
     }
 
-    await editTask(id, editInputValue, isDone);
+    await editTodo(id, editInputValue, isDone);
     setIsEdit(false);
     updateTasks();
   }
@@ -101,7 +101,7 @@ const TodoItem = (props) => {
           title={'Edit task'}
         />
       </Button>
-      <Button className={'item__button-delete'} onClick={handleDeleteTask}>
+      <Button className={'item__button-delete'} onClick={handledeleteTodo}>
         <img
           src={DeleteIcon}
           alt=""
