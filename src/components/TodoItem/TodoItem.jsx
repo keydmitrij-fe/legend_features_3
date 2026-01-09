@@ -4,14 +4,17 @@ import DeleteIcon from '../../assets/icons/delete-icon.svg';
 import EditIcon from '../../assets/icons/edit-icon.svg';
 import { deleteTodo, editTodo } from '../../api/todoAPI';
 import styles from './TodoItem.module.scss';
+import { validateTitle } from '../../helpers/validateTitle';
 
 const TodoItem = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { id, title, isDone, updateTodo, validationInput } = props;
+  const { id, title, isDone, updateTodo } = props;
 
   const [checkedTodo, setCheckedTodo] = useState(isDone);
   const [isEdit, setIsEdit] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
+  const [error, setError] = useState('');
+  const [isValid, setIsValid] = useState(true);
 
   async function handleDeleteTodo() {
     if (confirm('Удалить задачу?')) {
@@ -39,7 +42,12 @@ const TodoItem = (props) => {
   async function handleSaveNewTitle() {
     const title = editTitle.trim();
 
-    if (validationInput(title)) {
+    const { error, isValid } = validateTitle(title);
+
+    setError(error);
+    setIsValid(isValid);
+
+    if (isValid) {
       try {
         await editTodo(id, { title, isDone });
       } catch (e) {
@@ -58,10 +66,11 @@ const TodoItem = (props) => {
 
   return (
     <li className={styles.item}>
+      {!isValid && <span className={styles.error}>{error}</span>}
       {isEdit ? (
         <>
           <input
-            className={styles.editTitle}
+            className={`${styles.editTitle} ${!isValid && styles.isInvalid}`}
             type="text"
             value={editTitle}
             onChange={(event) => {

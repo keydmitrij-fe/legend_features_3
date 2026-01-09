@@ -1,11 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { addTodo } from '../../api/todoAPI';
 import Button from '../../ui/Button';
 import styles from './TodoTitle.module.scss';
+import { validateTitle } from '../../helpers/validateTitle';
 
 const TodoTitle = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { updateTodo, validationInput } = props;
+  const { updateTodo } = props;
+
+  const [error, setError] = useState('');
+  const [isValid, setIsValid] = useState(true);
 
   const titleRef = useRef();
 
@@ -14,7 +18,12 @@ const TodoTitle = (props) => {
 
     const title = titleRef.current.value.trim();
 
-    if (validationInput(title)) {
+    const { error, isValid } = validateTitle(title);
+
+    setError(error);
+    setIsValid(isValid);
+
+    if (isValid) {
       try {
         await addTodo(title);
       } catch (e) {
@@ -28,18 +37,15 @@ const TodoTitle = (props) => {
 
   return (
     <form className={styles.title} onSubmit={handleSubmit}>
+      {!isValid && <span className={styles.error}>{error}</span>}
       <input
-        className={styles.input}
+        className={`${styles.input} ${!isValid && styles.isInvalid}`}
         type="text"
         autoComplete={'off'}
         placeholder={'Task To Be Done...'}
         ref={titleRef}
       />
-      <Button
-        variant={'primary'}
-        className={styles.titleButton}
-        type={'submit'}
-      >
+      <Button variant={'primary'} className={styles.button} type={'submit'}>
         Add
       </Button>
     </form>

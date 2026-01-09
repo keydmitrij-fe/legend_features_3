@@ -12,27 +12,6 @@ const TodoPage = () => {
   });
   const [activeStatus, setActiveStatus] = useState('all');
 
-  function validationInput(title) {
-    const titleLength = title.trim().length;
-
-    if (titleLength === 0) {
-      alert('Это поле не может быть пустым');
-      return;
-    }
-
-    if (titleLength < 2) {
-      alert('Минимальная длина текста 2 символа');
-      return;
-    }
-
-    if (titleLength > 64) {
-      alert('Максимальная длина текста 64 символа');
-      return;
-    }
-
-    return true;
-  }
-
   useEffect(() => {
     updateTodo();
   }, [activeStatus]);
@@ -48,18 +27,14 @@ const TodoPage = () => {
 
   return (
     <div className={styles.todo}>
-      <TodoTitle updateTodo={updateTodo} validationInput={validationInput} />
+      <TodoTitle updateTodo={updateTodo} />
       <TodoInfo
         info={tasksData.info}
         status={activeStatus}
         setStatus={setActiveStatus}
         updateTodo={updateTodo}
       />
-      <TodoList
-        tasks={tasksData.data}
-        updateTodo={updateTodo}
-        validationInput={validationInput}
-      />
+      <TodoList tasks={tasksData.data} updateTodo={updateTodo} />
     </div>
   );
 };
