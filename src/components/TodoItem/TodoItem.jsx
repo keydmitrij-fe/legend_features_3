@@ -14,12 +14,13 @@ const TodoItem = (props) => {
   const [editTitle, setEditTitle] = useState(title);
 
   async function handleDeleteTodo() {
-    try {
-      await deleteTodo(id);
-    } catch (e) {
-      alert(e);
+    if (confirm('Удалить задачу?')) {
+      try {
+        await deleteTodo(id);
+      } catch (e) {
+        alert(e);
+      }
     }
-
     updateTodo();
   }
 
@@ -33,10 +34,6 @@ const TodoItem = (props) => {
     }
 
     updateTodo();
-  }
-
-  function handleChange(event) {
-    setEditTitle(event.target.value);
   }
 
   async function handleSaveNewTitle() {
@@ -67,7 +64,9 @@ const TodoItem = (props) => {
             className={styles.editTitle}
             type="text"
             value={editTitle}
-            onChange={handleChange}
+            onChange={(event) => {
+              setEditTitle(event.target.value);
+            }}
           />
           <Button
             variant={'primary'}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './TodoPage.scss';
+import styles from './TodoPage.module.scss';
 import TodoTitle from '../../components/TodoTitle';
 import TodoInfo from '../../components/TodoInfo';
 import TodoList from '../../components/TodoList';
@@ -47,7 +47,7 @@ const TodoPage = () => {
   }
 
   return (
-    <div className="todo">
+    <div className={styles.todo}>
       <TodoTitle updateTodo={updateTodo} validationInput={validationInput} />
       <TodoInfo
         info={tasksData.info}
