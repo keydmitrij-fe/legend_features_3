@@ -1,6 +1,10 @@
 .button {
+  height: 50px;
+  padding-inline: 20px;
   font-weight: 600;
   border: none;
+  border-radius: 10px;
+  cursor: pointer;
   color: #ffffff;
 
   &:active {

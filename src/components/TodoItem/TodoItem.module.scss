@@ -31,7 +31,7 @@
     background-color: #5492ff;
     border: none;
 
-    & + .item__label {
+    & + .label {
       text-decoration: line-through;
       color: #abaeb3;
     }
@@ -84,17 +84,6 @@
     border: 2px solid #fb6759;
     border-radius: 5px;
   }
-}
-
-.editButtonSave,
-.editButtonCancel {
-  height: 50px;
-  border: none;
-  font-weight: 600;
-  border-radius: 10px;
-  padding-inline: 20px;
-  cursor: pointer;
-  color: #ffffff;
 }
 
 .error {

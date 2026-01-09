@@ -77,18 +77,10 @@ const TodoItem = (props) => {
               setEditTitle(event.target.value);
             }}
           />
-          <Button
-            variant={'primary'}
-            className={styles.editButtonSave}
-            onClick={handleSaveNewTitle}
-          >
+          <Button variant={'primary'} onClick={handleSaveNewTitle}>
             Save
           </Button>
-          <Button
-            variant={'secondary'}
-            className={styles.editButtonCancel}
-            onClick={handleCancelNewTitle}
-          >
+          <Button variant={'secondary'} onClick={handleCancelNewTitle}>
             Cancel
           </Button>
         </>
