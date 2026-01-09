@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.scss';
+import './App.module.scss';
 import TodoPage from './pages/TodoPage';
 
 function App() {

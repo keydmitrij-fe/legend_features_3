@@ -1,12 +1,25 @@
 import React from 'react';
-import './Button.scss';
+import styles from './Button.module.scss';
 
 const Button = (props) => {
-  // eslint-disable-next-line react/prop-types
-  const { className = '', type = 'button', children, ...rest } = props;
+  const {
+    // eslint-disable-next-line react/prop-types
+    variant,
+    // eslint-disable-next-line react/prop-types
+    className = '',
+    // eslint-disable-next-line react/prop-types
+    type = 'button',
+    // eslint-disable-next-line react/prop-types
+    children,
+    ...rest
+  } = props;
 
   return (
-    <button className={`button ${className}`} type={type} {...rest}>
+    <button
+      className={`${styles.button} ${variant === 'primary' ? styles.primary : styles.secondary} ${className} `}
+      type={type}
+      {...rest}
+    >
       {children}
     </button>
   );

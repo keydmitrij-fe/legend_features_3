@@ -10,25 +10,23 @@ const TodoPage = () => {
     data: [],
     info: {},
   });
-
   const [activeStatus, setActiveStatus] = useState('all');
-  const [error, setError] = useState('');
 
   function validationInput(title) {
     const titleLength = title.trim().length;
 
     if (titleLength === 0) {
-      setError('Это поле не может быть пустым');
+      alert('Это поле не может быть пустым');
       return;
     }
 
     if (titleLength < 2) {
-      setError('Минимальная длина текста 2 символа');
+      alert('Минимальная длина текста 2 символа');
       return;
     }
 
     if (titleLength > 64) {
-      setError('Максимальная длина текста 64 символа');
+      alert('Максимальная длина текста 64 символа');
       return;
     }
 
@@ -50,18 +48,18 @@ const TodoPage = () => {
 
   return (
     <div className="todo">
-      <TodoTitle
-        updateTodo={updateTodo}
-        validationInput={validationInput}
-        error={error}
-      />
+      <TodoTitle updateTodo={updateTodo} validationInput={validationInput} />
       <TodoInfo
         info={tasksData.info}
         status={activeStatus}
         setStatus={setActiveStatus}
         updateTodo={updateTodo}
       />
-      <TodoList tasks={tasksData.data} updateTodo={updateTodo} />
+      <TodoList
+        tasks={tasksData.data}
+        updateTodo={updateTodo}
+        validationInput={validationInput}
+      />
     </div>
   );
 };

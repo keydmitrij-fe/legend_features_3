@@ -1,117 +1,131 @@
 import React, { useState } from 'react';
-import './TodoItem.scss';
 import Button from '../../ui/Button';
 import DeleteIcon from '../../assets/icons/delete-icon.svg';
 import EditIcon from '../../assets/icons/edit-icon.svg';
 import { deleteTodo, editTodo } from '../../api/todoAPI';
+import styles from './TodoItem.module.scss';
 
 const TodoItem = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { id, title, isDone, updateTodo } = props;
+  const { id, title, isDone, updateTodo, validationInput } = props;
 
-  const [checkedTask, setCheckedTask] = useState(isDone);
+  const [checkedTodo, setCheckedTodo] = useState(isDone);
   const [isEdit, setIsEdit] = useState(false);
-  const [editInputValue, setEditInputValue] = useState(title);
-  const [editInputError, setEditInputError] = useState('');
+  const [editTitle, setEditTitle] = useState(title);
 
-  async function handledeleteTodo() {
-    await deleteTodo(id);
+  async function handleDeleteTodo() {
+    try {
+      await deleteTodo(id);
+    } catch (e) {
+      alert(e);
+    }
+
     updateTodo();
   }
 
-  async function handleCheckedTask() {
-    setCheckedTask((prevState) => !prevState);
+  async function handleCheckedTodo() {
+    setCheckedTodo((prevState) => !prevState);
 
-    await editTodo(id, { title, isDone: !checkedTask });
+    try {
+      await editTodo(id, { title, isDone: !checkedTodo });
+    } catch (e) {
+      alert(e);
+    }
 
     updateTodo();
   }
 
   function handleChange(event) {
-    setEditInputValue(event.target.value);
-    setEditInputError('');
+    setEditTitle(event.target.value);
   }
 
   async function handleSaveNewTitle() {
-    if (editInputValue.trim().length === 0) {
-      setEditInputError('Это поле не может быть пустым');
-      return;
-    }
+    const title = editTitle.trim();
 
-    if (editInputValue.trim().length < 2) {
-      setEditInputError('Минимальная длина текста 2 символа');
-      return;
-    }
+    if (validationInput(title)) {
+      try {
+        await editTodo(id, { title, isDone });
+      } catch (e) {
+        alert(e);
+      }
 
-    if (editInputValue.trim().length > 64) {
-      setEditInputError('Максимальная длина текста 64 символа');
-      return;
+      setIsEdit(false);
+      updateTodo();
     }
-
-    await editTodo(id, { editInputValue, isDone });
-    setIsEdit(false);
-    updateTodo();
   }
 
-  return isEdit ? (
-    <li className={'todo__item item'}>
-      {editInputError && (
-        <span className={'item__edit-error'}>{editInputError}</span>
+  function handleCancelNewTitle() {
+    setIsEdit(false);
+    setEditTitle(title);
+  }
+
+  return (
+    <li className={styles.item}>
+      {isEdit ? (
+        <>
+          <input
+            className={styles.editTitle}
+            type="text"
+            value={editTitle}
+            onChange={handleChange}
+          />
+          <Button
+            variant={'primary'}
+            className={styles.editButtonSave}
+            onClick={handleSaveNewTitle}
+          >
+            Save
+          </Button>
+          <Button
+            variant={'secondary'}
+            className={styles.editButtonCancel}
+            onClick={handleCancelNewTitle}
+          >
+            Cancel
+          </Button>
+        </>
+      ) : (
+        <>
+          <input
+            className={styles.checkbox}
+            id={id}
+            type="checkbox"
+            checked={checkedTodo}
+            onChange={handleCheckedTodo}
+          />
+          <label className={styles.label} htmlFor={id}>
+            {title}
+          </label>
+          <Button
+            variant={'primary'}
+            className={styles.editButton}
+            onClick={() => setIsEdit(true)}
+          >
+            <img
+              src={EditIcon}
+              alt=""
+              width={20}
+              height={20}
+              aria-label={'Edit task'}
+              title={'Edit task'}
+            />
+          </Button>
+          <Button
+            variant={'secondary'}
+            className={styles.deleteButton}
+            onClick={handleDeleteTodo}
+          >
+            <img
+              src={DeleteIcon}
+              alt=""
+              width={20}
+              height={20}
+              aria-label={'Delete task'}
+              title={'Delete task'}
+            />
+          </Button>
+        </>
       )}
-      <input
-        className={`item__edit-field ${editInputError ? 'is-invalid' : ''}`}
-        type="text"
-        value={editInputValue}
-        onChange={handleChange}
-      />
-      <Button
-        className={'item__edit-button-save button'}
-        onClick={handleSaveNewTitle}
-      >
-        Save
-      </Button>
-      <Button
-        className={'item__edit-button-cancel button'}
-        onClick={() => {
-          setIsEdit(false);
-          setEditInputValue(title);
-        }}
-      >
-        Cancel
-      </Button>
-    </li>
-  ) : (
-    <li className={'todo__item item'}>
-      <input
-        className={'item__checkbox'}
-        id={id}
-        type="checkbox"
-        checked={checkedTask}
-        onChange={handleCheckedTask}
-      />
-      <label className={'item__label'} htmlFor={id}>
-        {title}
-      </label>
-      <Button className={'item__button-edit'} onClick={() => setIsEdit(true)}>
-        <img
-          src={EditIcon}
-          alt=""
-          width={20}
-          height={20}
-          aria-label={'Edit task'}
-          title={'Edit task'}
-        />
-      </Button>
-      <Button className={'item__button-delete'} onClick={handledeleteTodo}>
-        <img
-          src={DeleteIcon}
-          alt=""
-          width={20}
-          height={20}
-          aria-label={'Delete task'}
-          title={'Delete task'}
-        />
-      </Button>
     </li>
   );
 };

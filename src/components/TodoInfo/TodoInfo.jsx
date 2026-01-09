@@ -1,14 +1,14 @@
 import React from 'react';
-import './TodoInfo.scss';
+import styles from './TodoInfo.module.scss';
 
 const TodoInfo = (props) => {
   // eslint-disable-next-line react/prop-types
   const { info, status, setStatus } = props;
 
   return (
-    <ul className={'todo__info info'}>
+    <ul className={styles.info}>
       <li
-        className={`info__all ${status === 'all' ? 'active' : ''}`}
+        className={status === 'all' ? `${styles.active}` : ''}
         onClick={() => {
           setStatus('all');
         }}
@@ -17,7 +17,7 @@ const TodoInfo = (props) => {
         Все ({info.all})
       </li>
       <li
-        className={`info__in-work ${status === 'inWork' ? 'active' : ''}`}
+        className={status === 'inWork' ? `${styles.active}` : ''}
         onClick={() => {
           setStatus('inWork');
         }}
@@ -26,7 +26,7 @@ const TodoInfo = (props) => {
         {}В работе ({info.inWork})
       </li>
       <li
-        className={`info__completed ${status === 'completed' ? 'active' : ''}`}
+        className={status === 'completed' ? `${styles.active}` : ''}
         onClick={() => {
           setStatus('completed');
         }}

@@ -2,7 +2,6 @@
   font-weight: 600;
   border: none;
   color: #ffffff;
-  background-color: #5492ff;
 
   &:hover {
     opacity: 0.8;
@@ -11,4 +10,12 @@
   &:active {
     scale: 1.03;
   }
-} 
+}
+
+.primary {
+  background-color: #5492ff;
+}
+
+.secondary {
+  background-color: #fb6759;
+}

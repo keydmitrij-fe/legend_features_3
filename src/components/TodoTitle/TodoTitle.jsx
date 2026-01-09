@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
-import './TodoTitle.scss';
-import Button from '../../ui/Button';
 import { addTodo } from '../../api/todoAPI';
+import Button from '../../ui/Button';
+import styles from './TodoTitle.module.scss';
 
 const TodoTitle = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { updateTodo, validationInput, error } = props;
+  const { updateTodo, validationInput } = props;
 
   const titleRef = useRef();
 
@@ -27,16 +27,19 @@ const TodoTitle = (props) => {
   }
 
   return (
-    <form className={'todo__field field'} onSubmit={handleSubmit}>
-      {error && <span className={'field__error'}>{error}</span>}
+    <form className={styles.title} onSubmit={handleSubmit}>
       <input
-        className={`todo__field-input field-input  ${error ? 'is-invalid' : ''}`}
+        className={styles.input}
         type="text"
         autoComplete={'off'}
         placeholder={'Task To Be Done...'}
         ref={titleRef}
       />
-      <Button className={'todo__field-button field-button'} type={'submit'}>
+      <Button
+        variant={'primary'}
+        className={styles.titleButton}
+        type={'submit'}
+      >
         Add
       </Button>
     </form>
