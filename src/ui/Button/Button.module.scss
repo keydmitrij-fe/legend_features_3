@@ -1,0 +1,29 @@
+.button {
+  height: 50px;
+  padding-inline: 20px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #ffffff;
+
+  &:active {
+    scale: 1.03;
+  }
+}
+
+.primary {
+  background-color: #5492ff;
+
+  &:hover {
+    background-color: #0066cb;
+  }
+}
+
+.secondary {
+  background-color: #fb6759;
+
+  &:hover {
+    background-color: #d94c3e;
+  }
+}
