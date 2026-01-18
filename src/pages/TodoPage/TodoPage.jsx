@@ -3,7 +3,7 @@ import styles from './TodoPage.module.scss';
 import TodoTitle from '../../components/TodoTitle';
 import TodoInfo from '../../components/TodoInfo';
 import TodoList from '../../components/TodoList';
-import { getTodo } from '../../api/todoAPI';
+import { getTodos } from '../../api/todoAPI';
 
 const TodoPage = () => {
   const [todoItems, setTodoItems] = useState([]);
@@ -16,7 +16,7 @@ const TodoPage = () => {
 
   async function updateTodo() {
     try {
-      const todoData = await getTodo(activeStatus);
+      const todoData = await getTodos(activeStatus);
       setTodoItems(todoData.data);
       setTodoInfo(todoData.info);
     } catch (e) {

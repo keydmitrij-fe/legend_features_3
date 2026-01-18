@@ -1,6 +1,6 @@
 const API = 'https://easydev.club/api/v1/todos';
 
-export async function getTodo(status) {
+export async function getTodos(status) {
   const response = await fetch(`${API}?filter=${status}`);
   const data = await response.json();
 
