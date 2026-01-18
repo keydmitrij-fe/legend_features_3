@@ -6,10 +6,8 @@ import TodoList from '../../components/TodoList';
 import { getTodo } from '../../api/todoAPI';
 
 const TodoPage = () => {
-  const [tasksData, setTasksData] = useState({
-    data: [],
-    info: {},
-  });
+  const [todoItems, setTodoItems] = useState([]);
+  const [todoInfo, setTodoInfo] = useState({ all: 0, completed: 0, inWork: 0 });
   const [activeStatus, setActiveStatus] = useState('all');
 
   useEffect(() => {
@@ -18,8 +16,9 @@ const TodoPage = () => {
 
   async function updateTodo() {
     try {
-      const tasksData = await getTodo(activeStatus);
-      setTasksData({ data: tasksData.data, info: tasksData.info });
+      const todoData = await getTodo(activeStatus);
+      setTodoItems(todoData.data);
+      setTodoInfo(todoData.info);
     } catch (e) {
       alert(e);
     }
@@ -29,12 +28,12 @@ const TodoPage = () => {
     <div className={styles.todo}>
       <TodoTitle updateTodo={updateTodo} />
       <TodoInfo
-        info={tasksData.info}
+        info={todoInfo}
         status={activeStatus}
         setStatus={setActiveStatus}
         updateTodo={updateTodo}
       />
-      <TodoList tasks={tasksData.data} updateTodo={updateTodo} />
+      <TodoList tasks={todoItems} updateTodo={updateTodo} />
     </div>
   );
 };
