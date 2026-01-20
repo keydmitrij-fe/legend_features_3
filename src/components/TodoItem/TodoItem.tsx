@@ -1,46 +1,52 @@
-import React, { useState } from 'react';
+import { type ChangeEvent, type FC, useState } from 'react';
 import Button from '../../ui/Button';
 import DeleteIcon from '../../assets/icons/delete-icon.svg';
 import EditIcon from '../../assets/icons/edit-icon.svg';
-import { deleteTodo, editTodo } from '../../api/todoAPI';
+import { deleteTodo, editTodo } from '../../api/todoAPI.ts';
 import styles from './TodoItem.module.scss';
 import { validateTitle } from '../../helpers/validateTitle';
+import type { Todo } from '../../types/todoTypes.ts';
 
-const TodoItem = (props) => {
-  // eslint-disable-next-line react/prop-types
+type TodoItemProps = Todo & { updateTodo: () => Promise<void> };
+
+const TodoItem: FC<TodoItemProps> = (props) => {
   const { id, title, isDone, updateTodo } = props;
 
-  const [checkedTodo, setCheckedTodo] = useState(isDone);
-  const [isEdit, setIsEdit] = useState(false);
-  const [editTitle, setEditTitle] = useState(title);
-  const [error, setError] = useState('');
-  const [isValid, setIsValid] = useState(true);
+  const [checkedTodo, setCheckedTodo] = useState<boolean | undefined>(isDone);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editTitle, setEditTitle] = useState<string | undefined>(title);
+  const [error, setError] = useState<string>('');
+  const [isValid, setIsValid] = useState<boolean>(true);
 
   async function handleDeleteTodo() {
     if (confirm('Удалить задачу?')) {
       try {
-        await deleteTodo(id);
+        if (id) {
+          await deleteTodo(id);
+        }
       } catch (e) {
         alert(e);
       }
     }
-    updateTodo();
+    await updateTodo();
   }
 
   async function handleCheckedTodo() {
     setCheckedTodo((prevState) => !prevState);
 
     try {
-      await editTodo(id, { title, isDone: !checkedTodo });
+      if (id) {
+        await editTodo(id, { title, isDone: !checkedTodo });
+      }
     } catch (e) {
       alert(e);
     }
 
-    updateTodo();
+    await updateTodo();
   }
 
   async function handleSaveNewTitle() {
-    const title = editTitle.trim();
+    const title = editTitle?.trim();
 
     const { error, isValid } = validateTitle(title);
 
@@ -49,7 +55,9 @@ const TodoItem = (props) => {
 
     if (isValid) {
       try {
-        await editTodo(id, { title, isDone });
+        if (id) {
+          await editTodo(id, { title, isDone });
+        }
       } catch (e) {
         alert(e);
       }
@@ -73,8 +81,8 @@ const TodoItem = (props) => {
             className={`${styles.editTitle} ${!isValid && styles.isInvalid}`}
             type="text"
             value={editTitle}
-            onChange={(event) => {
-              setEditTitle(event.target.value);
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setEditTitle(event.target?.value);
             }}
           />
           <Button variant={'primary'} onClick={handleSaveNewTitle}>
@@ -88,12 +96,12 @@ const TodoItem = (props) => {
         <>
           <input
             className={styles.checkbox}
-            id={id}
+            id={`${id}`}
             type="checkbox"
             checked={checkedTodo}
             onChange={handleCheckedTodo}
           />
-          <label className={styles.label} htmlFor={id}>
+          <label className={styles.label} htmlFor={`${id}`}>
             {title}
           </label>
           <Button

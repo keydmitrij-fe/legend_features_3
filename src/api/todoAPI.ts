@@ -1,6 +1,15 @@
+import type {
+  MetaResponse,
+  Todo,
+  TodoInfo,
+  TodoStatus,
+} from '../types/todoTypes.ts';
+
 const API = 'https://easydev.club/api/v1/todos';
 
-export async function getTodos(status) {
+export async function getTodos(
+  status: TodoStatus,
+): Promise<MetaResponse<Todo, TodoInfo>> {
   const response = await fetch(`${API}?filter=${status}`);
   const data = await response.json();
 
@@ -11,7 +20,7 @@ export async function getTodos(status) {
   return data;
 }
 
-export async function addTodo(title) {
+export async function addTodo(title: string): Promise<void> {
   const response = await fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -23,7 +32,7 @@ export async function addTodo(title) {
   }
 }
 
-export async function deleteTodo(id) {
+export async function deleteTodo(id: number): Promise<void> {
   const response = await fetch(`${API}/${id}`, {
     method: 'DELETE',
   });
@@ -33,7 +42,7 @@ export async function deleteTodo(id) {
   }
 }
 
-export async function editTodo(id, editedTodo) {
+export async function editTodo(id: number, editedTodo: Todo): Promise<void> {
   const response = await fetch(`${API}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

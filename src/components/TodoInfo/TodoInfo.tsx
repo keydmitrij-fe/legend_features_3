@@ -1,8 +1,14 @@
-import React from 'react';
 import styles from './TodoInfo.module.scss';
+import type { FC } from 'react';
+import type { TodoInfo, TodoStatus } from '../../types/todoTypes.ts';
 
-const TodoInfo = (props) => {
-  // eslint-disable-next-line react/prop-types
+type TodoInfoProps = {
+  info: TodoInfo;
+  status: TodoStatus;
+  setStatus: (status: TodoStatus) => void;
+};
+
+const TodoInfo: FC<TodoInfoProps> = (props) => {
   const { info, status, setStatus } = props;
 
   return (
@@ -13,7 +19,6 @@ const TodoInfo = (props) => {
           setStatus('all');
         }}
       >
-        {/* eslint-disable-next-line react/prop-types */}
         Все ({info.all})
       </li>
       <li
@@ -22,8 +27,7 @@ const TodoInfo = (props) => {
           setStatus('inWork');
         }}
       >
-        {/* eslint-disable-next-line react/prop-types */}
-        {}В работе ({info.inWork})
+        В работе ({info.inWork})
       </li>
       <li
         className={status === 'completed' ? `${styles.active}` : ''}
@@ -31,7 +35,6 @@ const TodoInfo = (props) => {
           setStatus('completed');
         }}
       >
-        {/* eslint-disable-next-line react/prop-types */}
         Сделано ({info.completed})
       </li>
     </ul>

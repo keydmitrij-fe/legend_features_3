@@ -1,37 +1,43 @@
-import React, { useRef, useState } from 'react';
-import { addTodo } from '../../api/todoAPI';
+import { type FC, type FormEvent, useRef, useState } from 'react';
+import { addTodo } from '../../api/todoAPI.ts';
 import Button from '../../ui/Button';
 import styles from './TodoTitle.module.scss';
 import { validateTitle } from '../../helpers/validateTitle';
 
-const TodoTitle = (props) => {
-  // eslint-disable-next-line react/prop-types
+type TodoTitleProps = {
+  updateTodo: () => Promise<void>;
+};
+
+const TodoTitle: FC<TodoTitleProps> = (props) => {
   const { updateTodo } = props;
 
-  const [error, setError] = useState('');
-  const [isValid, setIsValid] = useState(true);
+  const [error, setError] = useState<string>('');
+  const [isValid, setIsValid] = useState<boolean>(true);
 
-  const titleRef = useRef();
+  const titleRef = useRef<HTMLInputElement>(null);
 
-  async function handleSubmit(event) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const title = titleRef.current.value.trim();
+    const title = titleRef.current?.value.trim();
 
     const { error, isValid } = validateTitle(title);
 
     setError(error);
     setIsValid(isValid);
 
-    if (isValid) {
+    if (isValid && title) {
       try {
         await addTodo(title);
       } catch (e) {
         alert(e);
       }
 
-      updateTodo();
-      titleRef.current.value = '';
+      await updateTodo();
+
+      if (titleRef.current) {
+        titleRef.current.value = '';
+      }
     }
   }
 

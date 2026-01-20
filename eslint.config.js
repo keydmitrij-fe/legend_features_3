@@ -9,13 +9,27 @@ import prettierConfig from 'eslint-config-prettier';
 export default defineConfig([
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    plugins: { js, prettier: prettierPlugin },
-    extends: ['js/recommended', prettierConfig],
-    languageOptions: { globals: globals.browser },
+    plugins: {
+      js,
+      prettier: prettierPlugin,
+      react: pluginReact,
+    },
+    extends: [
+      'js/recommended',
+      prettierConfig,
+      ...tseslint.configs.recommended,
+    ],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.es2021,
+        React: 'readonly',
+      },
+    },
     rules: {
       ...prettierPlugin.configs.recommended.rules,
+      ...pluginReact.configs.recommended.rules,
+      'react/react-in-jsx-scope': 'off',
     },
   },
-  tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
 ]);
