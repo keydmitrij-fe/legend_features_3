@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import styles from './TodoPage.module.scss';
 import TodoTitle from '../../components/TodoTitle';
-import TodoInfo from '../../components/TodoInfo';
 import TodoList from '../../components/TodoList';
-import { getTodos } from '../../api/todoAPI';
+import { getTodos } from '../../api/todoAPI.ts';
+import type { Todo, TodoStatus } from '../../types/todoTypes';
+import TodoInfo from '../../components/TodoInfo';
 
-const TodoPage = () => {
-  const [todoItems, setTodoItems] = useState([]);
-  const [todoInfo, setTodoInfo] = useState({ all: 0, completed: 0, inWork: 0 });
-  const [activeStatus, setActiveStatus] = useState('all');
+const TodoPage: FC = () => {
+  const [todoItems, setTodoItems] = useState<Todo[]>([]);
+  const [todoInfo, setTodoInfo] = useState({
+    all: 0,
+    completed: 0,
+    inWork: 0,
+  });
+  const [activeStatus, setActiveStatus] = useState<TodoStatus>('all');
 
   useEffect(() => {
     updateTodo();
   }, [activeStatus]);
 
-  async function updateTodo() {
+  async function updateTodo(): Promise<void> {
     try {
       const todoData = await getTodos(activeStatus);
+
       setTodoItems(todoData.data);
-      setTodoInfo(todoData.info);
+
+      if (todoData.info) {
+        setTodoInfo(todoData.info);
+      }
     } catch (e) {
       alert(e);
     }
@@ -31,7 +40,6 @@ const TodoPage = () => {
         info={todoInfo}
         status={activeStatus}
         setStatus={setActiveStatus}
-        updateTodo={updateTodo}
       />
       <TodoList tasks={todoItems} updateTodo={updateTodo} />
     </div>

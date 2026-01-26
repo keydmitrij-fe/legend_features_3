@@ -1,14 +1,18 @@
-import React from 'react';
+import { type FC } from 'react';
 import styles from './TodoList.module.scss';
 import TodoItem from '../TodoItem';
+import type { Todo } from '../../types/todoTypes.ts';
 
-const TodoList = (props) => {
-  // eslint-disable-next-line react/prop-types
+type TodoListProps = {
+  tasks: Todo[];
+  updateTodo: () => Promise<void>;
+};
+
+const TodoList: FC<TodoListProps> = (props) => {
   const { tasks, updateTodo } = props;
 
   return (
     <ul className={styles.list}>
-      {/* eslint-disable-next-line react/prop-types */}
       {tasks.map((task) => (
         <TodoItem
           key={task.id}
