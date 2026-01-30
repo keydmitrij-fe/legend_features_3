@@ -1,61 +1,51 @@
-import { type FC, type FormEvent, useRef, useState } from 'react';
+import React from 'react';
+import type { FormProps } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { addTodo } from '../../api/todoAPI.ts';
-import Button from '../../ui/Button';
-import styles from './TodoTitle.module.scss';
-import { validateTitle } from '../../helpers/validateTitle';
 
-type TodoTitleProps = {
-  updateTodo: () => Promise<void>;
+const onFinish: FormProps['onFinish'] = async (values) => {
+  await addTodo(values.title);
 };
 
-const TodoTitle: FC<TodoTitleProps> = (props) => {
-  const { updateTodo } = props;
-
-  const [error, setError] = useState<string>('');
-  const [isValid, setIsValid] = useState<boolean>(true);
-
-  const titleRef = useRef<HTMLInputElement>(null);
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const title = titleRef.current?.value.trim();
-
-    const { error, isValid } = validateTitle(title);
-
-    setError(error);
-    setIsValid(isValid);
-
-    if (isValid && title) {
-      try {
-        await addTodo(title);
-      } catch (e) {
-        alert(e);
-      }
-
-      await updateTodo();
-
-      if (titleRef.current) {
-        titleRef.current.value = '';
-      }
-    }
-  }
-
-  return (
-    <form className={styles.title} onSubmit={handleSubmit}>
-      {!isValid && <span className={styles.error}>{error}</span>}
-      <input
-        className={`${styles.input} ${!isValid && styles.isInvalid}`}
-        type="text"
-        autoComplete={'off'}
+const TodoTitle: React.FC = () => (
+  <Form
+    name="basic"
+    initialValues={{ remember: true }}
+    onFinish={onFinish}
+    autoComplete="off"
+    layout={'inline'}
+    size={'large'}
+  >
+    <Form.Item
+      name="title"
+      rules={[
+        { required: true, message: 'Это поле не может быть пустым' },
+        { whitespace: true, message: 'Это поле не может быть пустым' },
+        { min: 2, message: 'Минимальная длина текста 2 символа' },
+        { max: 64, message: 'Максимальная длина текста 64 символа' },
+      ]}
+    >
+      <Input
+        style={{
+          width: 280,
+          height: 50,
+          fontWeight: 600,
+        }}
         placeholder={'Task To Be Done...'}
-        ref={titleRef}
+        variant={'underlined'}
       />
-      <Button variant={'primary'} className={styles.button} type={'submit'}>
+    </Form.Item>
+
+    <Form.Item>
+      <Button
+        type="primary"
+        htmlType="submit"
+        style={{ width: 145, height: 50, fontWeight: 600 }}
+      >
         Add
       </Button>
-    </form>
-  );
-};
+    </Form.Item>
+  </Form>
+);
 
 export default TodoTitle;
