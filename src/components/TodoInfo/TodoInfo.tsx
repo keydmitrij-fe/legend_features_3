@@ -1,43 +1,47 @@
-import styles from './TodoInfo.module.scss';
-import type { FC } from 'react';
+import React from 'react';
+import { Tabs, TabsProps } from 'antd';
 import type { TodoInfo, TodoStatus } from '../../types/todoTypes.ts';
+import { stringToStatus } from '../../helpers/stringToStatus.ts';
 
 type TodoInfoProps = {
   info: TodoInfo;
-  status: TodoStatus;
   setStatus: (status: TodoStatus) => void;
 };
 
-const TodoInfo: FC<TodoInfoProps> = (props) => {
-  const { info, status, setStatus } = props;
+const TodoInfo: React.FC<TodoInfoProps> = (props) => {
+  const { info, setStatus } = props;
+
+  const onChange = (key: string) => {
+    if (stringToStatus(key)) {
+      setStatus(key);
+    }
+  };
+
+  const items: TabsProps['items'] = [
+    {
+      key: 'all',
+      label: `Все (${info.all})`,
+    },
+    {
+      key: 'inWork',
+      label: `В работе (${info.inWork})`,
+    },
+    {
+      key: 'completed',
+      label: `Сделано (${info.completed})`,
+    },
+  ];
 
   return (
-    <ul className={styles.info}>
-      <li
-        className={status === 'all' ? `${styles.active}` : ''}
-        onClick={() => {
-          setStatus('all');
-        }}
-      >
-        Все ({info.all})
-      </li>
-      <li
-        className={status === 'inWork' ? `${styles.active}` : ''}
-        onClick={() => {
-          setStatus('inWork');
-        }}
-      >
-        В работе ({info.inWork})
-      </li>
-      <li
-        className={status === 'completed' ? `${styles.active}` : ''}
-        onClick={() => {
-          setStatus('completed');
-        }}
-      >
-        Сделано ({info.completed})
-      </li>
-    </ul>
+    <Tabs
+      defaultActiveKey="all"
+      items={items}
+      onChange={onChange}
+      size={'large'}
+      centered
+      tabBarStyle={{ fontWeight: 700 }}
+      tabBarGutter={50}
+    />
   );
 };
 

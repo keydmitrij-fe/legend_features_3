@@ -1,6 +1,5 @@
 import React from 'react';
-import type { FormProps } from 'antd';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, FormProps, Input } from 'antd';
 import { addTodo } from '../../api/todoAPI.ts';
 
 const onFinish: FormProps['onFinish'] = async (values) => {
