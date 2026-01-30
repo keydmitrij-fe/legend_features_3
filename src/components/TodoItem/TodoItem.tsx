@@ -3,9 +3,14 @@ import { type ChangeEvent, type FC, useState } from 'react';
 import { deleteTodo, editTodo } from '../../api/todoAPI.ts';
 import styles from './TodoItem.module.scss';
 
+type TodoItemProps = {
+  id?: number;
+  title?: string;
+  isDone?: boolean;
+};
 
 const TodoItem: FC<TodoItemProps> = (props) => {
-  const { id, title, isDone, updateTodo } = props;
+  const { id, title, isDone } = props;
 
   const [checkedTodo, setCheckedTodo] = useState<boolean | undefined>(isDone);
   const [isEdit, setIsEdit] = useState<boolean>(false);
