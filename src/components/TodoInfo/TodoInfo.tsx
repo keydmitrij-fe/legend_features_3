@@ -1,14 +1,14 @@
-import React from 'react';
 import { Tabs, TabsProps } from 'antd';
 import type { TodoInfo, TodoStatus } from '../../types/todoTypes.ts';
 import { stringToStatus } from '../../helpers/stringToStatus.ts';
+import { FC } from 'react';
 
 type TodoInfoProps = {
   info: TodoInfo;
   setStatus: (status: TodoStatus) => void;
 };
 
-const TodoInfo: React.FC<TodoInfoProps> = (props) => {
+const TodoInfo: FC<TodoInfoProps> = (props) => {
   const { info, setStatus } = props;
 
   const onChange = (key: string) => {

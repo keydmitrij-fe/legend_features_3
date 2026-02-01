@@ -35,9 +35,9 @@ const TodoPage: FC = () => {
 
   return (
     <div className={styles.todo}>
-      <TodoTitle />
+      <TodoTitle updateTodo={updateTodo} />
       <TodoInfo info={todoInfo} setStatus={setActiveStatus} />
-      <TodoList tasks={todoItems} updateTodo={updateTodo} />
+      <TodoList items={todoItems} updateTodo={updateTodo} />
     </div>
   );
 };
