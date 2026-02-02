@@ -20,7 +20,7 @@ const TodoPage: FC = () => {
     updateTodo();
   }, [activeStatus]);
 
-  async function updateTodo(): Promise<void> {
+  async function updateTodo() {
     try {
       const todoData = await getTodos(activeStatus);
 
