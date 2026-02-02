@@ -8,6 +8,8 @@ import {
   FormProps,
   Input,
   List,
+  Popconfirm,
+  PopconfirmProps,
   Space,
 } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -60,7 +62,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete: PopconfirmProps['onConfirm'] = async () => {
     if (id) {
       try {
         await deleteTodo(id);
@@ -74,7 +76,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
   return (
     <List.Item key={id}>
       {isEdit ? (
-        <Form layout={'inline'} onFinish={handleEdit}>
+        <Form onFinish={handleEdit} layout={'inline'}>
           <Form.Item
             initialValue={title}
             name={'title'}
@@ -85,7 +87,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
               { max: 64, message: 'Максимальная длина текста 64 символа' },
             ]}
           >
-            <Input variant={'underlined'} size={'large'} />
+            <Input variant={'outlined'} size={'large'} style={{ width: 500 }} />
           </Form.Item>
           <Form.Item>
             <Space>
@@ -121,13 +123,20 @@ const TodoItem: FC<TodoItemProps> = (props) => {
               size={'large'}
               onClick={() => setIsEdit(true)}
             />
-            <Button
-              icon={<DeleteOutlined />}
-              variant={'solid'}
-              color={'danger'}
-              size={'large'}
-              onClick={handleDelete}
-            />
+            <Popconfirm
+              title="Delete the task"
+              description="Are you sure to delete this task?"
+              onConfirm={handleDelete}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                icon={<DeleteOutlined />}
+                variant={'solid'}
+                color={'danger'}
+                size={'large'}
+              />
+            </Popconfirm>
           </Space>
         </>
       )}

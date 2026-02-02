@@ -11,7 +11,7 @@ type TodoInfoProps = {
 const TodoInfo: FC<TodoInfoProps> = (props) => {
   const { info, setStatus } = props;
 
-  const onChange = (key: string) => {
+  const handleChange = (key: string) => {
     if (stringToStatus(key)) {
       setStatus(key);
     }
@@ -36,11 +36,11 @@ const TodoInfo: FC<TodoInfoProps> = (props) => {
     <Tabs
       defaultActiveKey="all"
       items={items}
-      onChange={onChange}
       size={'large'}
       centered
       tabBarStyle={{ fontWeight: 700 }}
       tabBarGutter={50}
+      onChange={handleChange}
     />
   );
 };

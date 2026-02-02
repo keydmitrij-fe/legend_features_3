@@ -1,8 +1,14 @@
-import './App.scss';
-import TodoPage from './pages/TodoPage/index.tsx';
+import { Layout } from 'antd';
+import TodoPage from './pages/TodoPage';
+import Sider from 'antd/es/layout/Sider';
 
 function App() {
-  return <TodoPage></TodoPage>;
+  return (
+    <Layout>
+      <Sider theme={'light'}>Sider</Sider>
+      <TodoPage />
+    </Layout>
+  );
 }
 
 export default App;

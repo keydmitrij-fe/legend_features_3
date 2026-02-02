@@ -1,10 +1,11 @@
 import { type FC, useEffect, useState } from 'react';
-import styles from './TodoPage.module.scss';
 import TodoTitle from '../../components/TodoTitle';
 import TodoList from '../../components/TodoList';
 import { getTodos } from '../../api/todoAPI.ts';
 import type { Todo, TodoStatus } from '../../types/todoTypes';
 import TodoInfo from '../../components/TodoInfo';
+import { Content } from 'antd/es/layout/layout';
+import { Layout } from 'antd';
 
 const TodoPage: FC = () => {
   const [todoItems, setTodoItems] = useState<Todo[]>([]);
@@ -34,11 +35,13 @@ const TodoPage: FC = () => {
   }
 
   return (
-    <div className={styles.todo}>
-      <TodoTitle updateTodo={updateTodo} />
-      <TodoInfo info={todoInfo} setStatus={setActiveStatus} />
-      <TodoList items={todoItems} updateTodo={updateTodo} />
-    </div>
+    <Layout>
+      <Content>
+        <TodoTitle updateTodo={updateTodo} />
+        <TodoInfo info={todoInfo} setStatus={setActiveStatus} />
+        <TodoList items={todoItems} updateTodo={updateTodo} />
+      </Content>
+    </Layout>
   );
 };
 
