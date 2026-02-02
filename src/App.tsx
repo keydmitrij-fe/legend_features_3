@@ -5,7 +5,7 @@ import Sider from 'antd/es/layout/Sider';
 function App() {
   return (
     <Layout>
-      <Sider theme={'light'}>Sider</Sider>
+      <Sider theme={'light'}></Sider>
       <TodoPage />
     </Layout>
   );

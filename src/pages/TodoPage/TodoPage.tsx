@@ -18,6 +18,12 @@ const TodoPage: FC = () => {
 
   useEffect(() => {
     updateTodo();
+
+    const refreshInterval = setInterval(updateTodo, 5000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, [activeStatus]);
 
   async function updateTodo() {
