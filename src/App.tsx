@@ -1,9 +1,8 @@
 import { Button, Flex, Layout } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router';
-import TodoPage from './pages/TodoPage';
-import Profile from './pages/Profile';
+import { BrowserRouter, NavLink } from 'react-router';
 import { CarryOutOutlined, SmileOutlined } from '@ant-design/icons';
+import Routers from './components/Routers';
 
 function App() {
   return (
@@ -34,10 +33,7 @@ function App() {
           </Flex>
         </Sider>
 
-        <Routes>
-          <Route path={'/'} element={<TodoPage />}></Route>
-          <Route path={'profile'} element={<Profile />}></Route>
-        </Routes>
+        <Routers />
       </Layout>
     </BrowserRouter>
   );
