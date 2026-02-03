@@ -13,7 +13,11 @@ const instance = axios.create({
 export const getTodos = async (
   status: TodoStatus,
 ): Promise<MetaResponse<Todo, TodoInfo>> => {
-  const response = await instance.get(`/todos?filter=${status}`);
+  const response = await instance.get('/todos', {
+    params: {
+      filter: status,
+    },
+  });
 
   return response.data;
 };
