@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 import { List } from 'antd';
 import { Todo } from '../../types/todoTypes.ts';
 import TodoItem from '../TodoItem';
@@ -28,4 +28,4 @@ const TodoList: FC<TodoListProps> = (props) => {
   );
 };
 
-export default memo(TodoList);
+export default TodoList;
