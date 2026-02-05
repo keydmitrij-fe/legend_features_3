@@ -1,14 +1,14 @@
 import { Button, Flex, Layout } from 'antd';
-import Sider from 'antd/es/layout/Sider';
 import { BrowserRouter, NavLink } from 'react-router';
 import { CarryOutOutlined, SmileOutlined } from '@ant-design/icons';
 import Routers from './components/Routers';
+import TodoSider from './components/TodoSider';
 
 function App() {
   return (
     <BrowserRouter>
       <Layout>
-        <Sider theme={'light'}>
+        <TodoSider theme={'light'}>
           <Flex vertical gap={10}>
             <NavLink to={'/'} end>
               <Button
@@ -31,7 +31,7 @@ function App() {
               </Button>
             </NavLink>
           </Flex>
-        </Sider>
+        </TodoSider>
 
         <Routers />
       </Layout>

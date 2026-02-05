@@ -1,6 +1,6 @@
-import { TodoStatus } from '../types/todoTypes.ts';
+import { Filters } from '../types/todoTypes.ts';
 
-export function stringToStatus(value: string): value is TodoStatus {
+export function stringToFilters(value: string): value is Filters {
   switch (value) {
     case 'all':
     case 'inWork':

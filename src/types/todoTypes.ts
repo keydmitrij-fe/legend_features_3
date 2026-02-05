@@ -1,4 +1,4 @@
-export type TodoStatus = 'all' | 'completed' | 'inWork';
+export type Filters = 'all' | 'completed' | 'inWork';
 
 export type Todo = {
   id?: number;
@@ -7,7 +7,7 @@ export type Todo = {
   isDone?: boolean;
 };
 
-export type TodoInfo = {
+export type TodoFilter = {
   all: number;
   completed: number;
   inWork: number;

@@ -1,8 +1,8 @@
 import type {
+  Filters,
   MetaResponse,
   Todo,
-  TodoInfo,
-  TodoStatus,
+  TodoFilter,
 } from '../types/todoTypes.ts';
 import axios from 'axios';
 
@@ -11,11 +11,11 @@ const instance = axios.create({
 });
 
 export const getTodos = async (
-  status: TodoStatus,
-): Promise<MetaResponse<Todo, TodoInfo>> => {
+  filter: Filters,
+): Promise<MetaResponse<Todo, TodoFilter>> => {
   const response = await instance.get('/todos', {
     params: {
-      filter: status,
+      filter,
     },
   });
 
