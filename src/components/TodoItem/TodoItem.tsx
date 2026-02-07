@@ -41,14 +41,15 @@ const TodoItem: FC<TodoItemProps> = (props) => {
           isDone: isDone,
         });
         await updateTodo();
+
+        setIsEdit(false);
+        setError(null);
       } catch (e) {
         if (isAxiosError(e) || e instanceof Error) {
           setError(e);
         }
       }
     }
-
-    setIsEdit(false);
   };
 
   const handleToggleCheckbox: CheckboxProps['onChange'] = async (
@@ -61,6 +62,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
           isDone: event.target.checked,
         });
         await updateTodo();
+        setError(null);
       } catch (e) {
         if (isAxiosError(e) || e instanceof Error) {
           setError(e);
@@ -74,6 +76,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
       try {
         await deleteTodo(id);
         await updateTodo();
+        setError(null);
       } catch (e) {
         if (isAxiosError(e) || e instanceof Error) {
           setError(e);

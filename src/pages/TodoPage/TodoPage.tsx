@@ -37,6 +37,7 @@ const TodoPage: FC = () => {
       if (todoData.info) {
         setTodoFilter(todoData.info);
       }
+      setError(null);
     } catch (e) {
       if (isAxiosError(e) || e instanceof Error) {
         setError(e);

@@ -18,6 +18,7 @@ const TodoTitle: FC<TodoTitleProps> = (props) => {
       try {
         await addTodo(values.title);
         await updateTodo();
+        setError(null);
       } catch (e) {
         if (isAxiosError(e) || e instanceof Error) {
           setError(e);
