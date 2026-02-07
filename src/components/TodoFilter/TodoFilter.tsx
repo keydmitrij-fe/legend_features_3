@@ -1,31 +1,34 @@
 import { Tabs, TabsProps } from 'antd';
-import type { Filters, TodoFilter } from '../../types/todoTypes.ts';
+import type { TodoFilter, TodoStatus } from '../../types/todoTypes.ts';
 import { FC } from 'react';
+import { isTodoStatus } from '../../helpers/isTodoFilter.ts';
 
 type TodoFilterProps = {
-  filters: TodoFilter;
-  setActiveFilter: (filter: Filters) => void;
+  TodoStatus: TodoFilter;
+  setActiveFilter: (filter: TodoStatus) => void;
 };
 
 const TodoFilter: FC<TodoFilterProps> = (props) => {
-  const { filters, setActiveFilter } = props;
+  const { TodoStatus, setActiveFilter } = props;
 
-  const handleChangeFilter = (key: Filters) => {
-    setActiveFilter(key);
+  const handleChangeFilter = (key: string) => {
+    if (isTodoStatus(key)) {
+      setActiveFilter(key);
+    }
   };
 
   const items: TabsProps['items'] = [
     {
       key: 'all',
-      label: `Все (${filters.all})`,
+      label: `Все (${TodoStatus.all})`,
     },
     {
       key: 'inWork',
-      label: `В работе (${filters.inWork})`,
+      label: `В работе (${TodoStatus.inWork})`,
     },
     {
       key: 'completed',
-      label: `Сделано (${filters.completed})`,
+      label: `Сделано (${TodoStatus.completed})`,
     },
   ];
 
@@ -37,7 +40,7 @@ const TodoFilter: FC<TodoFilterProps> = (props) => {
       centered
       tabBarStyle={{ fontWeight: 700 }}
       tabBarGutter={50}
-      onChange={(key) => handleChangeFilter(key as Filters)}
+      onChange={(key) => handleChangeFilter(key)}
     />
   );
 };

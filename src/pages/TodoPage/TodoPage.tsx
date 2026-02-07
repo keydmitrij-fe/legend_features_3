@@ -2,10 +2,10 @@ import { type FC, useEffect, useState } from 'react';
 import TodoTitle from '../../components/TodoTitle';
 import TodoList from '../../components/TodoList';
 import { getTodos } from '../../api/todoAPI.ts';
-import type { Filters, Todo } from '../../types/todoTypes';
+import type { Todo, TodoStatus } from '../../types/todoTypes';
 import TodoFilter from '../../components/TodoFilter';
 import { Content } from 'antd/es/layout/layout';
-import { Alert, Layout } from 'antd';
+import { Layout, notification } from 'antd';
 import { AxiosError, isAxiosError } from 'axios';
 
 const TodoPage: FC = () => {
@@ -15,7 +15,7 @@ const TodoPage: FC = () => {
     completed: 0,
     inWork: 0,
   });
-  const [activeFilter, setActiveFilter] = useState<Filters>('all');
+  const [activeFilter, setActiveFilter] = useState<TodoStatus>('all');
   const [error, setError] = useState<AxiosError | Error | null>(null);
 
   useEffect(() => {
@@ -46,21 +46,24 @@ const TodoPage: FC = () => {
   }
 
   return (
-    <Layout>
-      <Content>
-        {error && (
-          <Alert
-            title={error.name}
-            description={error.message}
-            type="error"
-            showIcon
+    <>
+      {error &&
+        notification.error({
+          title: error.name,
+          description: error.message,
+          duration: 2,
+        })}
+      <Layout>
+        <Content>
+          <TodoTitle updateTodo={updateTodo} />
+          <TodoFilter
+            TodoStatus={todoFilter}
+            setActiveFilter={setActiveFilter}
           />
-        )}
-        <TodoTitle updateTodo={updateTodo} />
-        <TodoFilter filters={todoFilter} setActiveFilter={setActiveFilter} />
-        <TodoList items={todoItems} updateTodo={updateTodo} />
-      </Content>
-    </Layout>
+          <TodoList items={todoItems} updateTodo={updateTodo} />
+        </Content>
+      </Layout>
+    </>
   );
 };
 

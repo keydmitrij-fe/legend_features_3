@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { deleteTodo, editTodo } from '../../api/todoAPI.ts';
 import {
-  Alert,
   Button,
   Checkbox,
   CheckboxProps,
@@ -9,6 +8,7 @@ import {
   FormProps,
   Input,
   List,
+  notification,
   Popconfirm,
   PopconfirmProps,
   Space,
@@ -30,6 +30,14 @@ const TodoItem: FC<TodoItemProps> = (props) => {
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [error, setError] = useState<AxiosError | Error | null>(null);
+
+  const TITLE_RULES = {
+    MIN_LENGTH: 2,
+    MAX_LENGTH: 64,
+    REQUIRED_MESSAGE: 'Это поле не может быть пустым',
+    MIN_MESSAGE: 'Минимальная длина текста 2 символа',
+    MAX_MESSAGE: 'Максимальная длина текста 64 символа',
+  };
 
   const handleEditTodo: FormProps['onFinish'] = async (values: Todo) => {
     const { title } = values;
@@ -87,14 +95,12 @@ const TodoItem: FC<TodoItemProps> = (props) => {
 
   return (
     <>
-      {error && (
-        <Alert
-          title={error.name}
-          description={error.message}
-          type="error"
-          showIcon
-        />
-      )}
+      {error &&
+        notification.error({
+          title: error.name,
+          description: error.message,
+          duration: 5,
+        })}
       <List.Item key={id}>
         {isEdit ? (
           <Form onFinish={handleEditTodo} layout={'inline'}>
@@ -102,10 +108,16 @@ const TodoItem: FC<TodoItemProps> = (props) => {
               initialValue={title}
               name={'title'}
               rules={[
-                { required: true, message: 'Это поле не может быть пустым' },
-                { whitespace: true, message: 'Это поле не может быть пустым' },
-                { min: 2, message: 'Минимальная длина текста 2 символа' },
-                { max: 64, message: 'Максимальная длина текста 64 символа' },
+                { required: true, message: TITLE_RULES.REQUIRED_MESSAGE },
+                { whitespace: true, message: TITLE_RULES.REQUIRED_MESSAGE },
+                {
+                  min: TITLE_RULES.MIN_LENGTH,
+                  message: TITLE_RULES.MIN_MESSAGE,
+                },
+                {
+                  max: TITLE_RULES.MAX_LENGTH,
+                  message: TITLE_RULES.MAX_MESSAGE,
+                },
               ]}
             >
               <Input
@@ -122,15 +134,15 @@ const TodoItem: FC<TodoItemProps> = (props) => {
                   size={'large'}
                   htmlType={'submit'}
                 >
-                  Save
+                  Сохранить
                 </Button>
                 <Button
-                  variant={'solid'}
-                  color={'danger'}
+                  variant={'outlined'}
+                  color={'primary'}
                   size={'large'}
                   onClick={() => setIsEdit(false)}
                 >
-                  Cancel
+                  Отмена
                 </Button>
               </Space>
             </Form.Item>
@@ -149,16 +161,16 @@ const TodoItem: FC<TodoItemProps> = (props) => {
                 onClick={() => setIsEdit(true)}
               />
               <Popconfirm
-                title="Delete the task"
-                description="Are you sure to delete this task?"
+                title="Удаление задачи"
+                description="Ты точно хочешь удалить эту задачу?"
                 onConfirm={handleDeleteTodo}
-                okText="Yes"
-                cancelText="No"
+                okText="Да"
+                cancelText="Нет"
               >
                 <Button
                   icon={<DeleteOutlined />}
-                  variant={'solid'}
-                  color={'danger'}
+                  variant="outlined"
+                  color="primary"
                   size={'large'}
                 />
               </Popconfirm>

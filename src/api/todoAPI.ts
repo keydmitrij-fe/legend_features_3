@@ -1,5 +1,5 @@
 import type {
-  Filters,
+  TodoStatus,
   MetaResponse,
   Todo,
   TodoFilter,
@@ -11,7 +11,7 @@ const instance = axios.create({
 });
 
 export const getTodos = async (
-  filter: Filters,
+  filter: TodoStatus,
 ): Promise<MetaResponse<Todo, TodoFilter>> => {
   const response = await instance.get('/todos', {
     params: {
@@ -22,8 +22,10 @@ export const getTodos = async (
   return response.data;
 };
 
-export async function addTodo(title: string) {
-  await instance.post('/todos', { isDone: false, title });
+export async function addTodo(title?: string) {
+  if (title) {
+    await instance.post('/todos', { isDone: false, title });
+  }
 }
 
 export async function deleteTodo(id: number) {
