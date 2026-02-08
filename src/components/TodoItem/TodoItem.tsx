@@ -1,140 +1,184 @@
-import { type ChangeEvent, type FC, useState } from 'react';
-import Button from '../../ui/Button';
-import DeleteIcon from '../../assets/icons/delete-icon.svg';
-import EditIcon from '../../assets/icons/edit-icon.svg';
+import { FC, useState } from 'react';
 import { deleteTodo, editTodo } from '../../api/todoAPI.ts';
-import styles from './TodoItem.module.scss';
-import { validateTitle } from '../../helpers/validateTitle';
-import type { Todo } from '../../types/todoTypes.ts';
+import {
+  Button,
+  Checkbox,
+  CheckboxProps,
+  Form,
+  FormProps,
+  Input,
+  List,
+  notification,
+  Popconfirm,
+  PopconfirmProps,
+  Space,
+} from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CheckboxChangeEvent } from 'antd/es/checkbox/Checkbox';
+import { Todo } from '../../types/todoTypes.ts';
+import { AxiosError, isAxiosError } from 'axios';
 
-type TodoItemProps = Todo & { updateTodo: () => Promise<void> };
+type TodoItemProps = {
+  id?: number;
+  title?: string;
+  isDone?: boolean;
+  updateTodo: () => Promise<void>;
+};
 
 const TodoItem: FC<TodoItemProps> = (props) => {
   const { id, title, isDone, updateTodo } = props;
 
-  const [checkedTodo, setCheckedTodo] = useState<boolean | undefined>(isDone);
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [editTitle, setEditTitle] = useState<string | undefined>(title);
-  const [error, setError] = useState<string>('');
-  const [isValid, setIsValid] = useState<boolean>(true);
+  const [error, setError] = useState<AxiosError | Error | null>(null);
 
-  async function handleDeleteTodo() {
-    if (confirm('Удалить задачу?')) {
+  const TITLE_RULES = {
+    MIN_LENGTH: 2,
+    MAX_LENGTH: 64,
+    REQUIRED_MESSAGE: 'Это поле не может быть пустым',
+    MIN_MESSAGE: 'Минимальная длина текста 2 символа',
+    MAX_MESSAGE: 'Максимальная длина текста 64 символа',
+  };
+
+  const handleEditTodo: FormProps['onFinish'] = async (values: Todo) => {
+    const { title } = values;
+
+    if (id) {
       try {
-        if (id) {
-          await deleteTodo(id);
-        }
+        await editTodo(id, {
+          title: title,
+          isDone: isDone,
+        });
+        await updateTodo();
+
+        setIsEdit(false);
+        setError(null);
       } catch (e) {
-        alert(e);
+        if (isAxiosError(e) || e instanceof Error) {
+          setError(e);
+        }
       }
     }
-    await updateTodo();
-  }
+  };
 
-  async function handleCheckedTodo() {
-    setCheckedTodo((prevState) => !prevState);
-
-    try {
-      if (id) {
-        await editTodo(id, { title, isDone: !checkedTodo });
-      }
-    } catch (e) {
-      alert(e);
-    }
-
-    await updateTodo();
-  }
-
-  async function handleSaveNewTitle() {
-    const title = editTitle?.trim();
-
-    const { error, isValid } = validateTitle(title);
-
-    setError(error);
-    setIsValid(isValid);
-
-    if (isValid) {
+  const handleToggleCheckbox: CheckboxProps['onChange'] = async (
+    event: CheckboxChangeEvent,
+  ) => {
+    if (id) {
       try {
-        if (id) {
-          await editTodo(id, { title, isDone });
-        }
+        await editTodo(id, {
+          title: title,
+          isDone: event.target.checked,
+        });
+        await updateTodo();
+        setError(null);
       } catch (e) {
-        alert(e);
+        if (isAxiosError(e) || e instanceof Error) {
+          setError(e);
+        }
       }
-
-      setIsEdit(false);
-      updateTodo();
     }
-  }
+  };
 
-  function handleCancelNewTitle() {
-    setIsEdit(false);
-    setEditTitle(title);
-  }
+  const handleDeleteTodo: PopconfirmProps['onConfirm'] = async () => {
+    if (id) {
+      try {
+        await deleteTodo(id);
+        await updateTodo();
+        setError(null);
+      } catch (e) {
+        if (isAxiosError(e) || e instanceof Error) {
+          setError(e);
+        }
+      }
+    }
+  };
 
   return (
-    <li className={styles.item}>
-      {!isValid && <span className={styles.error}>{error}</span>}
-      {isEdit ? (
-        <>
-          <input
-            className={`${styles.editTitle} ${!isValid && styles.isInvalid}`}
-            type="text"
-            value={editTitle}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setEditTitle(event.target?.value);
-            }}
-          />
-          <Button variant={'primary'} onClick={handleSaveNewTitle}>
-            Save
-          </Button>
-          <Button variant={'secondary'} onClick={handleCancelNewTitle}>
-            Cancel
-          </Button>
-        </>
-      ) : (
-        <>
-          <input
-            className={styles.checkbox}
-            id={`${id}`}
-            type="checkbox"
-            checked={checkedTodo}
-            onChange={handleCheckedTodo}
-          />
-          <label className={styles.label} htmlFor={`${id}`}>
-            {title}
-          </label>
-          <Button
-            variant={'primary'}
-            className={styles.editButton}
-            onClick={() => setIsEdit(true)}
-          >
-            <img
-              src={EditIcon}
-              alt=""
-              width={20}
-              height={20}
-              aria-label={'Edit task'}
-              title={'Edit task'}
-            />
-          </Button>
-          <Button
-            variant={'secondary'}
-            className={styles.deleteButton}
-            onClick={handleDeleteTodo}
-          >
-            <img
-              src={DeleteIcon}
-              alt=""
-              width={20}
-              height={20}
-              aria-label={'Delete task'}
-              title={'Delete task'}
-            />
-          </Button>
-        </>
-      )}
-    </li>
+    <>
+      {error &&
+        notification.error({
+          title: error.name,
+          description: error.message,
+          duration: 5,
+        })}
+      <List.Item key={id}>
+        {isEdit ? (
+          <Form onFinish={handleEditTodo} layout={'inline'}>
+            <Form.Item
+              initialValue={title}
+              name={'title'}
+              rules={[
+                { required: true, message: TITLE_RULES.REQUIRED_MESSAGE },
+                { whitespace: true, message: TITLE_RULES.REQUIRED_MESSAGE },
+                {
+                  min: TITLE_RULES.MIN_LENGTH,
+                  message: TITLE_RULES.MIN_MESSAGE,
+                },
+                {
+                  max: TITLE_RULES.MAX_LENGTH,
+                  message: TITLE_RULES.MAX_MESSAGE,
+                },
+              ]}
+            >
+              <Input
+                variant={'outlined'}
+                size={'large'}
+                style={{ width: 500 }}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Space>
+                <Button
+                  variant={'solid'}
+                  color={'primary'}
+                  size={'large'}
+                  htmlType={'submit'}
+                >
+                  Сохранить
+                </Button>
+                <Button
+                  variant={'outlined'}
+                  color={'primary'}
+                  size={'large'}
+                  onClick={() => setIsEdit(false)}
+                >
+                  Отмена
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        ) : (
+          <>
+            <Checkbox checked={isDone} onChange={handleToggleCheckbox}>
+              {title}
+            </Checkbox>
+            <Space>
+              <Button
+                icon={<EditOutlined />}
+                variant={'solid'}
+                color={'primary'}
+                size={'large'}
+                onClick={() => setIsEdit(true)}
+              />
+              <Popconfirm
+                title="Удаление задачи"
+                description="Ты точно хочешь удалить эту задачу?"
+                onConfirm={handleDeleteTodo}
+                okText="Да"
+                cancelText="Нет"
+              >
+                <Button
+                  icon={<DeleteOutlined />}
+                  variant="outlined"
+                  color="primary"
+                  size={'large'}
+                />
+              </Popconfirm>
+            </Space>
+          </>
+        )}
+      </List.Item>
+    </>
   );
 };
 

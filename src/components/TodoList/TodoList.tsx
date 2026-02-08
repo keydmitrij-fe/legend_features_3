@@ -1,28 +1,30 @@
-import { type FC } from 'react';
-import styles from './TodoList.module.scss';
+import { FC } from 'react';
+import { List } from 'antd';
+import { Todo } from '../../types/todoTypes.ts';
 import TodoItem from '../TodoItem';
-import type { Todo } from '../../types/todoTypes.ts';
 
 type TodoListProps = {
-  tasks: Todo[];
+  items: Todo[];
   updateTodo: () => Promise<void>;
 };
 
 const TodoList: FC<TodoListProps> = (props) => {
-  const { tasks, updateTodo } = props;
+  const { items, updateTodo } = props;
 
   return (
-    <ul className={styles.list}>
-      {tasks.map((task) => (
+    <List
+      itemLayout="horizontal"
+      dataSource={items}
+      size={'large'}
+      renderItem={(item) => (
         <TodoItem
-          key={task.id}
-          id={task.id}
-          title={task.title}
-          isDone={task.isDone}
+          id={item.id}
+          title={item.title}
+          isDone={item.isDone}
           updateTodo={updateTodo}
         />
-      ))}
-    </ul>
+      )}
+    />
   );
 };
 

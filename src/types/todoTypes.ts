@@ -7,7 +7,7 @@ export type Todo = {
   isDone?: boolean;
 };
 
-export type TodoInfo = {
+export type TodoFilter = {
   all: number;
   completed: number;
   inWork: number;

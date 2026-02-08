@@ -1,8 +1,16 @@
-import { type FC, type FormEvent, useRef, useState } from 'react';
+import {
+  Button,
+  Flex,
+  Form,
+  FormProps,
+  Input,
+  notification,
+  Space,
+} from 'antd';
 import { addTodo } from '../../api/todoAPI.ts';
-import Button from '../../ui/Button';
-import styles from './TodoTitle.module.scss';
-import { validateTitle } from '../../helpers/validateTitle';
+import { FC, useState } from 'react';
+import { Todo } from '../../types/todoTypes.ts';
+import { AxiosError, isAxiosError } from 'axios';
 
 type TodoTitleProps = {
   updateTodo: () => Promise<void>;
@@ -11,50 +19,74 @@ type TodoTitleProps = {
 const TodoTitle: FC<TodoTitleProps> = (props) => {
   const { updateTodo } = props;
 
-  const [error, setError] = useState<string>('');
-  const [isValid, setIsValid] = useState<boolean>(true);
+  const [error, setError] = useState<AxiosError | Error | null>(null);
 
-  const titleRef = useRef<HTMLInputElement>(null);
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const title = titleRef.current?.value.trim();
-
-    const { error, isValid } = validateTitle(title);
-
-    setError(error);
-    setIsValid(isValid);
-
-    if (isValid && title) {
-      try {
-        await addTodo(title);
-      } catch (e) {
-        alert(e);
-      }
-
+  const handleAddTodo: FormProps['onFinish'] = async (values: Todo) => {
+    try {
+      await addTodo(values.title);
       await updateTodo();
-
-      if (titleRef.current) {
-        titleRef.current.value = '';
+      setError(null);
+    } catch (e) {
+      if (isAxiosError(e) || e instanceof Error) {
+        setError(e);
       }
     }
-  }
+  };
+
+  const TITLE_RULES = {
+    MIN_LENGTH: 2,
+    MAX_LENGTH: 64,
+    REQUIRED_MESSAGE: 'Это поле не может быть пустым',
+    MIN_MESSAGE: 'Минимальная длина текста 2 символа',
+    MAX_MESSAGE: 'Максимальная длина текста 64 символа',
+  };
 
   return (
-    <form className={styles.title} onSubmit={handleSubmit}>
-      {!isValid && <span className={styles.error}>{error}</span>}
-      <input
-        className={`${styles.input} ${!isValid && styles.isInvalid}`}
-        type="text"
-        autoComplete={'off'}
-        placeholder={'Task To Be Done...'}
-        ref={titleRef}
-      />
-      <Button variant={'primary'} className={styles.button} type={'submit'}>
-        Add
-      </Button>
-    </form>
+    <>
+      {error &&
+        notification.error({
+          title: error.name,
+          description: error.message,
+          duration: 5,
+        })}
+      <Flex justify={'center'}>
+        <Form
+          initialValues={{ remember: true }}
+          onFinish={handleAddTodo}
+          autoComplete="off"
+        >
+          <Space.Compact>
+            <Form.Item
+              name="title"
+              rules={[
+                { required: true, message: TITLE_RULES.REQUIRED_MESSAGE },
+                { whitespace: true, message: TITLE_RULES.REQUIRED_MESSAGE },
+                {
+                  min: TITLE_RULES.MIN_LENGTH,
+                  message: TITLE_RULES.MIN_MESSAGE,
+                },
+                {
+                  max: TITLE_RULES.MAX_LENGTH,
+                  message: TITLE_RULES.MAX_MESSAGE,
+                },
+              ]}
+            >
+              <Input
+                placeholder={'Task To Be Done...'}
+                variant={'outlined'}
+                size={'large'}
+                style={{ width: 500 }}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" size={'large'}>
+                Добавить
+              </Button>
+            </Form.Item>
+          </Space.Compact>
+        </Form>
+      </Flex>
+    </>
   );
 };
 

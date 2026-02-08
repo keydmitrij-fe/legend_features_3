@@ -1,55 +1,37 @@
 import type {
+  TodoStatus,
   MetaResponse,
   Todo,
-  TodoInfo,
-  TodoStatus,
+  TodoFilter,
 } from '../types/todoTypes.ts';
+import axios from 'axios';
 
-const API = 'https://easydev.club/api/v1/todos';
+const instance = axios.create({
+  baseURL: 'https://easydev.club/api/v1',
+});
 
-export async function getTodos(
-  status: TodoStatus,
-): Promise<MetaResponse<Todo, TodoInfo>> {
-  const response = await fetch(`${API}?filter=${status}`);
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch tasks');
-  }
-
-  return data;
-}
-
-export async function addTodo(title: string): Promise<void> {
-  const response = await fetch(API, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ isDone: false, title }),
+export const getTodos = async (
+  filter: TodoStatus,
+): Promise<MetaResponse<Todo, TodoFilter>> => {
+  const response = await instance.get('/todos', {
+    params: {
+      filter,
+    },
   });
 
-  if (!response.ok) {
-    throw new Error('Error adding a task');
+  return response.data;
+};
+
+export async function addTodo(title?: string) {
+  if (title) {
+    await instance.post('/todos', { isDone: false, title });
   }
 }
 
-export async function deleteTodo(id: number): Promise<void> {
-  const response = await fetch(`${API}/${id}`, {
-    method: 'DELETE',
-  });
-
-  if (!response.ok) {
-    throw new Error('Error when deleting task');
-  }
+export async function deleteTodo(id: number) {
+  await instance.delete(`/todos/${id}`);
 }
 
 export async function editTodo(id: number, editedTodo: Todo): Promise<void> {
-  const response = await fetch(`${API}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(editedTodo),
-  });
-
-  if (!response.ok) {
-    throw new Error('Error editing task');
-  }
+  await instance.put(`todos/${id}`, editedTodo);
 }
