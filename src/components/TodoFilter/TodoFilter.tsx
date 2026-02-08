@@ -1,7 +1,7 @@
 import { Tabs, TabsProps } from 'antd';
 import type { TodoFilter, TodoStatus } from '../../types/todoTypes.ts';
 import { FC } from 'react';
-import { isTodoStatus } from '../../helpers/isTodoFilter.ts';
+import { isTodoStatus } from '../../helpers/isTodoStatus.ts';
 
 type TodoFilterProps = {
   TodoStatus: TodoFilter;

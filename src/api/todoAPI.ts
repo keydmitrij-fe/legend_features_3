@@ -1,8 +1,8 @@
 import type {
-  TodoStatus,
   MetaResponse,
   Todo,
   TodoFilter,
+  TodoStatus,
 } from '../types/todoTypes.ts';
 import axios from 'axios';
 
@@ -22,16 +22,16 @@ export const getTodos = async (
   return response.data;
 };
 
-export async function addTodo(title?: string) {
+export const addTodo = async (title?: string) => {
   if (title) {
     await instance.post('/todos', { isDone: false, title });
   }
-}
+};
 
-export async function deleteTodo(id: number) {
+export const deleteTodo = async (id: number) => {
   await instance.delete(`/todos/${id}`);
-}
+};
 
-export async function editTodo(id: number, editedTodo: Todo): Promise<void> {
+export const editTodo = async (id: number, editedTodo: Todo) => {
   await instance.put(`todos/${id}`, editedTodo);
-}
+};
