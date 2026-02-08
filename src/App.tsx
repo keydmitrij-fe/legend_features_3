@@ -3,6 +3,7 @@ import { BrowserRouter, NavLink } from 'react-router';
 import { CarryOutOutlined, SmileOutlined } from '@ant-design/icons';
 import Routers from './components/Routers';
 import TodoSider from './components/TodoSider';
+import { Content } from 'antd/es/layout/layout';
 
 function App() {
   return (
@@ -32,7 +33,9 @@ function App() {
             </NavLink>
           </Flex>
         </TodoSider>
-        <Routers />
+        <Content>
+          <Routers />
+        </Content>
       </Layout>
     </BrowserRouter>
   );
