@@ -16,6 +16,9 @@ function App() {
               variant={'solid'}
               color={'primary'}
               size={'large'}
+              style={{
+                width: '100%',
+              }}
             >
               Список задач
             </Button>
@@ -26,6 +29,9 @@ function App() {
               variant={'solid'}
               color={'primary'}
               size={'large'}
+              style={{
+                width: '100%',
+              }}
             >
               Профиль
             </Button>

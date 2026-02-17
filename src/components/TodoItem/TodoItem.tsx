@@ -93,7 +93,11 @@ const TodoItem: FC<TodoItemProps> = (props) => {
               },
             ]}
           >
-            <Input variant={'outlined'} size={'large'} style={{ width: 500 }} />
+            <Input
+              variant={'outlined'}
+              size={'large'}
+              style={{ width: 500, marginLeft: 20 }}
+            />
           </Form.Item>
           <Form.Item>
             <Space>
@@ -118,10 +122,14 @@ const TodoItem: FC<TodoItemProps> = (props) => {
         </Form>
       ) : (
         <>
-          <Checkbox checked={isDone} onChange={handleToggleCheckboxTodo}>
+          <Checkbox
+            checked={isDone}
+            onChange={handleToggleCheckboxTodo}
+            style={{ marginLeft: 20 }}
+          >
             {title}
           </Checkbox>
-          <Space>
+          <Space style={{ marginRight: 20 }}>
             <Button
               icon={<EditOutlined />}
               variant={'solid'}
