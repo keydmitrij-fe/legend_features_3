@@ -19,7 +19,9 @@ type TodoTitleProps = {
 const TodoTitle: FC<TodoTitleProps> = (props) => {
   const { updateTodo } = props;
 
-  const onFinish: FormProps['onFinish'] = async (values: Todo) => {
+  const onFinish: FormProps['onFinish'] = async (
+    values: Pick<Todo, 'title'>,
+  ) => {
     try {
       await addTodo(values.title);
       await updateTodo();

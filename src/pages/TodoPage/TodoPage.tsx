@@ -9,7 +9,7 @@ import { Todo, TodoInfoFilter } from '../../types/todoTypes.ts';
 
 const TodoPage: FC = () => {
   const [todoItems, setTodoItems] = useState<Todo[]>([]);
-  const [todoInfo, setTodoInfo] = useState({
+  const [todoInfoStatuses, setTodoInfoStatuses] = useState({
     all: 0,
     completed: 0,
     inWork: 0,
@@ -34,7 +34,7 @@ const TodoPage: FC = () => {
       setTodoItems(response.data.data);
 
       if (response.data.info) {
-        setTodoInfo(response.data.info);
+        setTodoInfoStatuses(response.data.info);
       }
     } catch (e) {
       console.error(e);
@@ -50,7 +50,7 @@ const TodoPage: FC = () => {
       <Content>
         <TodoTitle updateTodo={updateTodo} />
         <TodoStatusFilter
-          todoInfo={todoInfo}
+          todoInfoStatuses={todoInfoStatuses}
           setActiveInfoStatus={setActiveInfoStatus}
         />
         <TodoList todoItems={todoItems} updateTodo={updateTodo} />
