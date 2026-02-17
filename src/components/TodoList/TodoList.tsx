@@ -3,19 +3,18 @@ import { List } from 'antd';
 import { Todo } from '../../types/todoTypes.ts';
 import TodoItem from '../TodoItem';
 
-type TodoListProps = {
-  items: Todo[];
+interface TodoListProps {
+  todoItems: Todo[];
   updateTodo: () => Promise<void>;
-};
+}
 
 const TodoList: FC<TodoListProps> = (props) => {
-  const { items, updateTodo } = props;
+  const { todoItems, updateTodo } = props;
 
   return (
     <List
       itemLayout="horizontal"
-      dataSource={items}
-      size={'large'}
+      dataSource={todoItems}
       renderItem={(item) => (
         <TodoItem
           id={item.id}

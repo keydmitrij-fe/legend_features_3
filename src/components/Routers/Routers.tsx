@@ -6,8 +6,8 @@ import Profile from '../../pages/ProfilePage';
 const Routers: FC = () => {
   return (
     <Routes>
-      <Route path={'/'} element={<TodoPage />}></Route>
-      <Route path={'profile'} element={<Profile />}></Route>
+      <Route path={'/'} element={<TodoPage />} />
+      <Route path={'profile'} element={<Profile />} />
     </Routes>
   );
 };

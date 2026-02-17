@@ -2,21 +2,20 @@ import { type FC, useEffect, useState } from 'react';
 import TodoTitle from '../../components/TodoTitle';
 import TodoList from '../../components/TodoList';
 import { getTodos } from '../../api/todoAPI.ts';
-import type { Todo, TodoStatus } from '../../types/todoTypes';
-import TodoFilter from '../../components/TodoFilter';
+import TodoStatusFilter from '../../components/TodoStatusFilter';
 import { Content } from 'antd/es/layout/layout';
 import { Layout, notification } from 'antd';
-import { AxiosError, isAxiosError } from 'axios';
+import { Todo, TodoInfoFilter } from '../../types/todoTypes.ts';
 
 const TodoPage: FC = () => {
   const [todoItems, setTodoItems] = useState<Todo[]>([]);
-  const [todoFilter, setTodoFilter] = useState({
+  const [todoInfo, setTodoInfo] = useState({
     all: 0,
     completed: 0,
     inWork: 0,
   });
-  const [activeFilter, setActiveFilter] = useState<TodoStatus>('all');
-  const [error, setError] = useState<AxiosError | Error | null>(null);
+  const [activeInfoStatus, setActiveInfoStatus] =
+    useState<TodoInfoFilter>('all');
 
   useEffect(() => {
     updateTodo();
@@ -26,44 +25,37 @@ const TodoPage: FC = () => {
     return () => {
       clearInterval(refreshInterval);
     };
-  }, [activeFilter]);
+  }, [activeInfoStatus]);
 
-  async function updateTodo() {
+  const updateTodo = async () => {
     try {
-      const todoData = await getTodos(activeFilter);
+      const response = await getTodos(activeInfoStatus);
 
-      setTodoItems(todoData.data);
+      setTodoItems(response.data.data);
 
-      if (todoData.info) {
-        setTodoFilter(todoData.info);
+      if (response.data.info) {
+        setTodoInfo(response.data.info);
       }
-      setError(null);
     } catch (e) {
-      if (isAxiosError(e) || e instanceof Error) {
-        setError(e);
-      }
+      console.error(e);
+      notification.error({
+        title: 'Ошибка!',
+        description: 'Ошибка при загрузке списка задач',
+      });
     }
-  }
+  };
 
   return (
-    <>
-      {error &&
-        notification.error({
-          title: error.name,
-          description: error.message,
-          duration: 2,
-        })}
-      <Layout>
-        <Content>
-          <TodoTitle updateTodo={updateTodo} />
-          <TodoFilter
-            TodoStatus={todoFilter}
-            setActiveFilter={setActiveFilter}
-          />
-          <TodoList items={todoItems} updateTodo={updateTodo} />
-        </Content>
-      </Layout>
-    </>
+    <Layout>
+      <Content>
+        <TodoTitle updateTodo={updateTodo} />
+        <TodoStatusFilter
+          todoInfo={todoInfo}
+          setActiveInfoStatus={setActiveInfoStatus}
+        />
+        <TodoList todoItems={todoItems} updateTodo={updateTodo} />
+      </Content>
+    </Layout>
   );
 };
 
