@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import {
   MetaResponse,
   Todo,
@@ -5,13 +6,7 @@ import {
   TodoInfoFilter,
   TodoRequest,
 } from '../types/todoTypes.ts';
-import axios, { AxiosResponse } from 'axios';
-
-const API_URL = 'https://easydev.club/api/v1';
-
-const api = axios.create({
-  baseURL: API_URL,
-});
+import { api } from '../api/http.ts';
 
 export const getTodos = async (
   filter: TodoInfoFilter,

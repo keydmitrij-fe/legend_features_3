@@ -1,11 +1,11 @@
 import { type FC, useEffect, useState } from 'react';
 import TodoTitle from '../../components/TodoTitle';
 import TodoList from '../../components/TodoList';
-import { getTodos } from '../../api/todoAPI.ts';
 import TodoStatusFilter from '../../components/TodoStatusFilter';
 import { Content } from 'antd/es/layout/layout';
 import { Layout, notification } from 'antd';
 import { Todo, TodoInfoFilter } from '../../types/todoTypes.ts';
+import { getTodos } from '../../services/todoServices.ts';
 
 const TodoPage: FC = () => {
   const [todoItems, setTodoItems] = useState<Todo[]>([]);

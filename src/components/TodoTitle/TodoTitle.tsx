@@ -7,10 +7,10 @@ import {
   notification,
   Space,
 } from 'antd';
-import { addTodo } from '../../api/todoAPI.ts';
 import { FC } from 'react';
 import { Todo } from '../../types/todoTypes.ts';
 import { VALIDATION_RULES } from '../../constants/validationRules.ts';
+import { addTodo } from '../../services/todoServices.ts';
 
 type TodoTitleProps = {
   updateTodo: () => Promise<void>;

@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { deleteTodo, editTodo } from '../../api/todoAPI.ts';
 import {
   Button,
   Checkbox,
@@ -17,6 +16,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { CheckboxChangeEvent } from 'antd/es/checkbox/Checkbox';
 import { TodoRequest } from '../../types/todoTypes.ts';
 import { VALIDATION_RULES } from '../../constants/validationRules.ts';
+import { deleteTodo, editTodo } from '../../services/todoServices.ts';
 
 interface TodoItemProps {
   id: number;
