@@ -181,6 +181,10 @@ const RegisterPage: FC = () => {
             Зарегистрироваться
           </Button>
         </Form.Item>
+
+        <Form.Item label={null}>
+          <Link to={'/login'}>Войти</Link>
+        </Form.Item>
       </Form>
     </Flex>
   );
