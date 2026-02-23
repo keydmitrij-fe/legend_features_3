@@ -1,27 +1,30 @@
 import { Button, Flex, Layout } from 'antd';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink } from 'react-router';
 import { CarryOutOutlined, SmileOutlined } from '@ant-design/icons';
 import Routers from './components/Routers';
 import AppSider from './components/AppSider';
 import { Content } from 'antd/es/layout/layout';
 import { useAppDispatch, useAppSelector } from './store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { setAuth } from './store/slices/authSlice.ts';
 
 function App() {
   const isAuth = useAppSelector((state) => state.auth.isAuth);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
       dispatch(setAuth(true));
-      navigate('/');
     } else {
       dispatch(setAuth(false));
-      navigate('/login');
     }
-  }, []);
+    setIsLoading(false);
+  }, [dispatch]);
+
+  if (isLoading) {
+    return;
+  }
 
   return (
     <Layout>
