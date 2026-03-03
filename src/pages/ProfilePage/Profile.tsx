@@ -4,7 +4,7 @@ import { getProfile } from '../../services/userServices.ts';
 import { ProfileRequest } from '../../types/authTypes.ts';
 import { logout } from '../../services/authServices.ts';
 import { useNavigate } from 'react-router';
-import { tokenManager } from '../../helpers/tokenManager.ts';
+import { tokenManager } from '../../helpers/TokenManager.ts';
 import { useAppDispatch } from '../../store';
 import { setAuth } from '../../store/slices/authSlice.ts';
 

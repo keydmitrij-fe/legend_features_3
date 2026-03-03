@@ -1,4 +1,4 @@
-class createManagerToken {
+class TokenManager {
   private token: string | null = null;
 
   public setToken(newToken: string) {
@@ -14,4 +14,4 @@ class createManagerToken {
   }
 }
 
-export const tokenManager = new createManagerToken();
+export const tokenManager = new TokenManager();

@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router';
 import { login } from '../../services/authServices.ts';
 import { useAppDispatch } from '../../store';
 import { setAuth } from '../../store/slices/authSlice.ts';
-import { tokenManager } from '../../helpers/tokenManager.ts';
+import { tokenManager } from '../../helpers/TokenManager.ts';
 import {
   VALIDATION_INPUTS_MESSAGE,
   VALIDATION_INPUTS_RULES,

@@ -1,42 +1,19 @@
 import axios from 'axios';
-import { tokenManager } from '../helpers/tokenManager.ts';
+import { tokenManager } from '../helpers/TokenManager.ts';
 import { Token } from '../types/authTypes.ts';
+import { notification } from 'antd';
 
 export const API_URL = 'https://easydev.club/api/v1';
 
 export const api = axios.create({
   baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
 
-const refresh = async () => {
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    const response = await axios.post<Token>(`${API_URL}/auth/refresh`, {
-      refreshToken: token,
-    });
-    tokenManager.setToken(response.data.accessToken);
-    localStorage.setItem('token', response.data.refreshToken);
-
-    return tokenManager.getToken();
-  }
-};
-
-if (!tokenManager.getToken()) {
-  await refresh();
-}
-
-api.interceptors.request.use(
-  (config) => {
-    if (!config.headers['Authorization']) {
-      config.headers['Authorization'] = `Bearer ${tokenManager.getToken()}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
+api.interceptors.request.use((config) => {
+  config.headers.Authorization = `Bearer ${tokenManager.getToken()}`;
+  return config;
+});
 
 api.interceptors.response.use(
   (response) => response,
@@ -47,11 +24,23 @@ api.interceptors.response.use(
       prevRequest.sent = true;
 
       try {
-        const newAccessToken = await refresh();
-        prevRequest.headers.authorization = `Bearer ${newAccessToken}`;
+        const response = await axios.post<Token>(`${API_URL}/auth/refresh`, {
+          refreshToken: localStorage.getItem('token'),
+        });
+
+        tokenManager.setToken(response.data.accessToken);
+
+        prevRequest.headers.authorization = `Bearer ${tokenManager.getToken()}`;
+
+        localStorage.setItem('token', response.data.refreshToken);
+
         return api(prevRequest);
-      } catch {
-        localStorage.clear();
+      } catch (e) {
+        console.error(e);
+        notification.error({
+          title: 'Ошибка!',
+          description: 'Срок действия токена истек',
+        });
       }
     }
     return Promise.reject(error);
