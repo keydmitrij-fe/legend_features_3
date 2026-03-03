@@ -56,7 +56,7 @@ const Profile: FC = () => {
     },
   ];
 
-  const handleClick = async () => {
+  const handleLogout = async () => {
     try {
       await logout();
       dispatch(setAuth(false));
@@ -78,7 +78,7 @@ const Profile: FC = () => {
       <Button
         style={{ marginLeft: '90%' }}
         size={'large'}
-        onClick={handleClick}
+        onClick={handleLogout}
       >
         Выйти
       </Button>

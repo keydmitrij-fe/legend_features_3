@@ -9,8 +9,11 @@ import {
 } from 'antd';
 import { FC } from 'react';
 import { Todo } from '../../types/todoTypes.ts';
-import { VALIDATION_RULES } from '../../constants/validationRules.ts';
 import { addTodo } from '../../services/todoServices.ts';
+import {
+  VALIDATION_INPUTS_MESSAGE,
+  VALIDATION_INPUTS_RULES,
+} from '../../constants/validationRules.ts';
 
 type TodoTitleProps = {
   updateTodo: () => Promise<void>;
@@ -41,15 +44,15 @@ const TodoTitle: FC<TodoTitleProps> = (props) => {
           <Form.Item
             name="title"
             rules={[
-              { required: true, message: VALIDATION_RULES.REQUIRED_MESSAGE },
-              { whitespace: true, message: VALIDATION_RULES.REQUIRED_MESSAGE },
+              { required: true, message: VALIDATION_INPUTS_MESSAGE.REQUIRED },
+              { whitespace: true, message: VALIDATION_INPUTS_MESSAGE.REQUIRED },
               {
-                min: VALIDATION_RULES.TITLE.MIN_LENGTH,
-                message: VALIDATION_RULES.TITLE.MIN_MESSAGE,
+                min: VALIDATION_INPUTS_RULES.TITLE.MIN_LENGTH,
+                message: VALIDATION_INPUTS_MESSAGE.TITLE.MIN_LENGTH,
               },
               {
-                max: VALIDATION_RULES.TITLE.MAX_LENGTH,
-                message: VALIDATION_RULES.TITLE.MAX_MESSAGE,
+                max: VALIDATION_INPUTS_RULES.TITLE.MAX_LENGTH,
+                message: VALIDATION_INPUTS_MESSAGE.TITLE.MAX_LENGTH,
               },
             ]}
           >

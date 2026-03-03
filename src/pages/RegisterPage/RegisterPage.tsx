@@ -1,18 +1,12 @@
 import { FC, useState } from 'react';
-import {
-  Button,
-  Flex,
-  Form,
-  FormProps,
-  Input,
-  notification,
-  Typography,
-} from 'antd';
+import { Button, Form, FormProps, Input, notification, Typography } from 'antd';
 import { UserRegistration } from '../../types/authTypes.ts';
 import { register } from '../../services/authServices.ts';
 import { Link } from 'react-router';
-import registerImage from '../../assets/image/auth_illustration.png';
-import { VALIDATION_RULES } from '../../constants/validationRules.ts';
+import {
+  VALIDATION_INPUTS_MESSAGE,
+  VALIDATION_INPUTS_RULES,
+} from '../../constants/validationRules.ts';
 
 const RegisterPage: FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
@@ -44,149 +38,161 @@ const RegisterPage: FC = () => {
   }
 
   return (
-    <Flex align={'center'} justify={'center'}>
-      <img width={1000} height={1000} src={registerImage} alt="" />
-      <Form
-        name="basic"
-        style={{ minWidth: 420 }}
-        onFinish={onFinish}
-        autoComplete="off"
-        layout={'vertical'}
-        size={'large'}
+    <Form
+      name="basic"
+      style={{ maxWidth: 420 }}
+      onFinish={onFinish}
+      autoComplete="off"
+      layout={'vertical'}
+      size={'large'}
+    >
+      <Form.Item>
+        <Typography.Title level={2}>Регистрация</Typography.Title>
+      </Form.Item>
+
+      <Form.Item
+        label="Имя пользователя"
+        name="username"
+        rules={[
+          {
+            required: true,
+            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
+          },
+          {
+            min: VALIDATION_INPUTS_RULES.USERNAME.MIN_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.USERNAME.MAX_LENGTH,
+          },
+          {
+            max: VALIDATION_INPUTS_RULES.USERNAME.MAX_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.USERNAME.MAX_LENGTH,
+          },
+          {
+            pattern: VALIDATION_INPUTS_RULES.USERNAME.REGEX,
+            message: VALIDATION_INPUTS_MESSAGE.USERNAME.REGEX,
+          },
+        ]}
       >
-        <Form.Item>
-          <Typography.Title level={2}>Регистрация</Typography.Title>
-        </Form.Item>
+        <Input />
+      </Form.Item>
 
-        <Form.Item
-          label="Имя пользователя"
-          name="username"
-          rules={[
-            { required: true, message: VALIDATION_RULES.REQUIRED_MESSAGE },
-            {
-              min: VALIDATION_RULES.USERNAME.MIN_LENGTH,
-              message: VALIDATION_RULES.USERNAME.MIN_MESSAGE,
-            },
-            {
-              max: VALIDATION_RULES.USERNAME.MAX_LENGTH,
-              message: VALIDATION_RULES.USERNAME.MAX_MESSAGE,
-            },
-            {
-              pattern: VALIDATION_RULES.USERNAME.REGEX,
-              message: VALIDATION_RULES.USERNAME.REGEX_MESSAGE,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+      <Form.Item
+        label="Логин"
+        name="login"
+        rules={[
+          {
+            required: true,
+            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
+          },
+          {
+            min: VALIDATION_INPUTS_RULES.LOGIN.MIN_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.LOGIN.MAX_LENGTH,
+          },
+          {
+            max: VALIDATION_INPUTS_RULES.LOGIN.MAX_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.LOGIN.MAX_LENGTH,
+          },
+          {
+            pattern: VALIDATION_INPUTS_RULES.LOGIN.REGEX,
+            message: VALIDATION_INPUTS_MESSAGE.LOGIN.REGEX,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
 
-        <Form.Item
-          label="Логин"
-          name="login"
-          rules={[
-            { required: true, message: VALIDATION_RULES.REQUIRED_MESSAGE },
-            {
-              min: VALIDATION_RULES.LOGIN.MIN_LENGTH,
-              message: VALIDATION_RULES.LOGIN.MIN_MESSAGE,
-            },
-            {
-              max: VALIDATION_RULES.LOGIN.MAX_LENGTH,
-              message: VALIDATION_RULES.LOGIN.MAX_MESSAGE,
-            },
-            {
-              pattern: VALIDATION_RULES.LOGIN.REGEX,
-              message: VALIDATION_RULES.LOGIN.REGEX_MESSAGE,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+      <Form.Item
+        label="Пароль"
+        name="password"
+        rules={[
+          {
+            required: true,
+            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
+          },
+          {
+            min: VALIDATION_INPUTS_RULES.PASSWORD.MIN_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MAX_LENGTH,
+          },
+          {
+            max: VALIDATION_INPUTS_RULES.PASSWORD.MAX_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MAX_LENGTH,
+          },
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
 
-        <Form.Item
-          label="Пароль"
-          name="password"
-          rules={[
-            { required: true, message: VALIDATION_RULES.REQUIRED_MESSAGE },
-            {
-              min: VALIDATION_RULES.PASSWORD.MIN_LENGTH,
-              message: VALIDATION_RULES.PASSWORD.MIN_MESSAGE,
+      <Form.Item
+        label="Повторите пароль"
+        name="confirmPassword"
+        dependencies={['password']}
+        rules={[
+          {
+            required: true,
+            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
+          },
+          {
+            min: VALIDATION_INPUTS_RULES.PASSWORD.MIN_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MIN_LENGTH,
+          },
+          {
+            max: VALIDATION_INPUTS_RULES.PASSWORD.MAX_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MAX_LENGTH,
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(
+                new Error('Новый пароль, который вы ввели, не совпадает!'),
+              );
             },
-            {
-              max: VALIDATION_RULES.PASSWORD.MAX_LENGTH,
-              message: VALIDATION_RULES.PASSWORD.MAX_MESSAGE,
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
+          }),
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
 
-        <Form.Item
-          label="Повторите пароль"
-          name="confirmPassword"
-          dependencies={['password']}
-          rules={[
-            { required: true, message: VALIDATION_RULES.REQUIRED_MESSAGE },
-            {
-              min: VALIDATION_RULES.PASSWORD.MIN_LENGTH,
-              message: VALIDATION_RULES.PASSWORD.MIN_MESSAGE,
-            },
-            {
-              max: VALIDATION_RULES.PASSWORD.MAX_LENGTH,
-              message: VALIDATION_RULES.PASSWORD.MAX_MESSAGE,
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error('Новый пароль, который вы ввели, не совпадает!'),
-                );
-              },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
+      <Form.Item
+        label="Почтовый адрес"
+        name="email"
+        rules={[
+          {
+            required: true,
+            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
+          },
+          {
+            pattern: VALIDATION_INPUTS_RULES.EMAIL.REGEX,
+            message: VALIDATION_INPUTS_MESSAGE.EMAIL.REGEX,
+          },
+        ]}
+      >
+        <Input type={'email'} />
+      </Form.Item>
 
-        <Form.Item
-          label="Почтовый адрес"
-          name="email"
-          rules={[
-            { required: true, message: VALIDATION_RULES.REQUIRED_MESSAGE },
-            {
-              pattern: VALIDATION_RULES.EMAIL.REGEX,
-              message: VALIDATION_RULES.EMAIL.REGEX_MESSAGE,
-            },
-          ]}
-        >
-          <Input type={'email'} />
-        </Form.Item>
+      <Form.Item
+        label="Телефон"
+        name="phoneNumber"
+        rules={[
+          {
+            pattern: VALIDATION_INPUTS_RULES.PHONE_NUMBER.REGEX,
+            message: VALIDATION_INPUTS_MESSAGE.PHONE_NUMBER.REGEX,
+          },
+        ]}
+      >
+        <Input type={'tel'} />
+      </Form.Item>
 
-        <Form.Item
-          label="Телефон"
-          name="phoneNumber"
-          rules={[
-            {
-              pattern: VALIDATION_RULES.PHONE_NUMBER.REGEX,
-              message: VALIDATION_RULES.PHONE_NUMBER.REGEX_MESSAGE,
-            },
-          ]}
-        >
-          <Input type={'tel'} />
-        </Form.Item>
+      <Form.Item label={null}>
+        <Button type="primary" htmlType="submit">
+          Зарегистрироваться
+        </Button>
+      </Form.Item>
 
-        <Form.Item label={null}>
-          <Button type="primary" htmlType="submit">
-            Зарегистрироваться
-          </Button>
-        </Form.Item>
-
-        <Form.Item label={null}>
-          <Link to={'/login'}>Войти</Link>
-        </Form.Item>
-      </Form>
-    </Flex>
+      <Form.Item label={null}>
+        <Link to={'/login'}>Войти</Link>
+      </Form.Item>
+    </Form>
   );
 };
 

@@ -1,17 +1,17 @@
-const createManagerToken = () => {
-  let token: string | null = null;
+class createManagerToken {
+  private token: string | null = null;
 
-  return {
-    setToken: (newToken: string) => {
-      token = newToken;
-    },
-    getToken: () => {
-      return token;
-    },
-    clearToken: () => {
-      token = null;
-    },
-  };
-};
+  public setToken(newToken: string) {
+    this.token = newToken;
+  }
 
-export const tokenManager = createManagerToken();
+  public getToken(): string | null {
+    return this.token;
+  }
+
+  public clearToken() {
+    this.token = null;
+  }
+}
+
+export const tokenManager = new createManagerToken();
