@@ -60,7 +60,7 @@ const RegisterPage: FC = () => {
           },
           {
             min: VALIDATION_INPUTS_RULES.USERNAME.MIN_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.USERNAME.MAX_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.USERNAME.MIN_LENGTH,
           },
           {
             max: VALIDATION_INPUTS_RULES.USERNAME.MAX_LENGTH,
@@ -85,7 +85,7 @@ const RegisterPage: FC = () => {
           },
           {
             min: VALIDATION_INPUTS_RULES.LOGIN.MIN_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.LOGIN.MAX_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.LOGIN.MIN_LENGTH,
           },
           {
             max: VALIDATION_INPUTS_RULES.LOGIN.MAX_LENGTH,
@@ -110,7 +110,7 @@ const RegisterPage: FC = () => {
           },
           {
             min: VALIDATION_INPUTS_RULES.PASSWORD.MIN_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MAX_LENGTH,
+            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MIN_LENGTH,
           },
           {
             max: VALIDATION_INPUTS_RULES.PASSWORD.MAX_LENGTH,
