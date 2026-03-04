@@ -76,7 +76,7 @@ const Profile: FC = () => {
     <>
       <Table dataSource={dataSource} columns={columns} pagination={false} />
       <Button
-        style={{ marginLeft: '90%' }}
+        style={{ marginLeft: '82%', marginTop: 8 }}
         size={'large'}
         onClick={handleLogout}
       >
