@@ -7,10 +7,13 @@ import {
   notification,
   Space,
 } from 'antd';
-import { addTodo } from '../../api/todoAPI.ts';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Todo } from '../../types/todoTypes.ts';
-import { AxiosError, isAxiosError } from 'axios';
+import { addTodo } from '../../services/todoServices.ts';
+import {
+  VALIDATION_INPUTS_MESSAGE,
+  VALIDATION_INPUTS_RULES,
+} from '../../constants/validationRules.ts';
 
 type TodoTitleProps = {
   updateTodo: () => Promise<void>;
@@ -19,74 +22,55 @@ type TodoTitleProps = {
 const TodoTitle: FC<TodoTitleProps> = (props) => {
   const { updateTodo } = props;
 
-  const [error, setError] = useState<AxiosError | Error | null>(null);
-
-  const handleAddTodo: FormProps['onFinish'] = async (values: Todo) => {
+  const onFinish: FormProps['onFinish'] = async (
+    values: Pick<Todo, 'title'>,
+  ) => {
     try {
       await addTodo(values.title);
       await updateTodo();
-      setError(null);
     } catch (e) {
-      if (isAxiosError(e) || e instanceof Error) {
-        setError(e);
-      }
+      console.error(e);
+      notification.error({
+        title: 'Ошибка!',
+        description: 'Ошибка при добавлении задачи',
+      });
     }
   };
 
-  const TITLE_RULES = {
-    MIN_LENGTH: 2,
-    MAX_LENGTH: 64,
-    REQUIRED_MESSAGE: 'Это поле не может быть пустым',
-    MIN_MESSAGE: 'Минимальная длина текста 2 символа',
-    MAX_MESSAGE: 'Максимальная длина текста 64 символа',
-  };
-
   return (
-    <>
-      {error &&
-        notification.error({
-          title: error.name,
-          description: error.message,
-          duration: 5,
-        })}
-      <Flex justify={'center'}>
-        <Form
-          initialValues={{ remember: true }}
-          onFinish={handleAddTodo}
-          autoComplete="off"
-        >
-          <Space.Compact>
-            <Form.Item
-              name="title"
-              rules={[
-                { required: true, message: TITLE_RULES.REQUIRED_MESSAGE },
-                { whitespace: true, message: TITLE_RULES.REQUIRED_MESSAGE },
-                {
-                  min: TITLE_RULES.MIN_LENGTH,
-                  message: TITLE_RULES.MIN_MESSAGE,
-                },
-                {
-                  max: TITLE_RULES.MAX_LENGTH,
-                  message: TITLE_RULES.MAX_MESSAGE,
-                },
-              ]}
-            >
-              <Input
-                placeholder={'Task To Be Done...'}
-                variant={'outlined'}
-                size={'large'}
-                style={{ width: 500 }}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" size={'large'}>
-                Добавить
-              </Button>
-            </Form.Item>
-          </Space.Compact>
-        </Form>
-      </Flex>
-    </>
+    <Flex justify={'center'}>
+      <Form onFinish={onFinish} autoComplete="off">
+        <Space.Compact>
+          <Form.Item
+            name="title"
+            rules={[
+              { required: true, message: VALIDATION_INPUTS_MESSAGE.REQUIRED },
+              { whitespace: true, message: VALIDATION_INPUTS_MESSAGE.REQUIRED },
+              {
+                min: VALIDATION_INPUTS_RULES.TITLE.MIN_LENGTH,
+                message: VALIDATION_INPUTS_MESSAGE.TITLE.MIN_LENGTH,
+              },
+              {
+                max: VALIDATION_INPUTS_RULES.TITLE.MAX_LENGTH,
+                message: VALIDATION_INPUTS_MESSAGE.TITLE.MAX_LENGTH,
+              },
+            ]}
+          >
+            <Input
+              placeholder={'Задача, которую нужно выполнить...'}
+              variant={'outlined'}
+              size={'large'}
+              style={{ width: 500 }}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" size={'large'}>
+              Добавить
+            </Button>
+          </Form.Item>
+        </Space.Compact>
+      </Form>
+    </Flex>
   );
 };
 
