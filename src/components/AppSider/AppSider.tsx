@@ -3,7 +3,11 @@ import Sider, { SiderProps } from 'antd/es/layout/Sider';
 import { useAppSelector } from '../../store';
 import { NavLink } from 'react-router';
 import { Button, Flex } from 'antd';
-import { CarryOutOutlined, SmileOutlined } from '@ant-design/icons';
+import {
+  CarryOutOutlined,
+  SmileOutlined,
+  UserSwitchOutlined,
+} from '@ant-design/icons';
 
 const AppSider: FC<SiderProps> = (props) => {
   const { ...rest } = props;
@@ -38,6 +42,19 @@ const AppSider: FC<SiderProps> = (props) => {
               }}
             >
               Профиль
+            </Button>
+          </NavLink>
+          <NavLink to={'/users'}>
+            <Button
+              icon={<UserSwitchOutlined />}
+              variant={'solid'}
+              color={'primary'}
+              size={'large'}
+              style={{
+                width: '100%',
+              }}
+            >
+              Пользователи
             </Button>
           </NavLink>
         </Flex>

@@ -8,7 +8,7 @@ import { tokenManager } from '../../helpers/TokenManager.ts';
 import { useAppDispatch } from '../../store';
 import { setAuth } from '../../store/slices/authSlice.ts';
 
-const Profile: FC = () => {
+const ProfilePage: FC = () => {
   const [profile, setProfile] = useState<ProfileRequest>({
     username: '',
     email: '',
@@ -86,4 +86,4 @@ const Profile: FC = () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;
