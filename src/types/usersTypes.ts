@@ -13,7 +13,7 @@ export interface User {
 export interface UsersFilters {
   search?: string;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc' | undefined;
   isBlocked?: boolean;
   limit?: number;
   page?: number;

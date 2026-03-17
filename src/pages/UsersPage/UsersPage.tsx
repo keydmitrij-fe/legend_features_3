@@ -6,6 +6,7 @@ import {
   notification,
   Popconfirm,
   Radio,
+  RadioChangeEvent,
   Select,
   Space,
   Table,
@@ -30,10 +31,15 @@ import {
 interface TableParams {
   pagination?: TablePaginationConfig;
   sortField?: SorterResult['field'];
-  sortOrder?: SorterResult['order'];
+  sortOrder?: SorterResult['order'] | undefined;
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
   search?: string;
   isBlocked?: boolean | undefined;
+}
+
+interface ModalRoleOptions {
+  idUser: number;
+  rolesUser: Roles[];
 }
 
 const UsersPage: FC = () => {
@@ -49,7 +55,7 @@ const UsersPage: FC = () => {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalRoleOptions, setModalRoleOptions] = useState({
+  const [modalRoleOptions, setModalRoleOptions] = useState<ModalRoleOptions>({
     idUser: 0,
     rolesUser: [],
   });
@@ -191,16 +197,18 @@ const UsersPage: FC = () => {
     _,
     sorter,
   ) => {
+    const singleSorter = Array.isArray(sorter) ? sorter[0] : sorter;
+
     fetchUsers({
-      page: pagination?.current - 1,
+      page: pagination?.current ? pagination?.current - 1 : 0,
       limit: pagination.pageSize,
       sortOrder:
-        sorter.order === 'ascend'
+        singleSorter.order === 'ascend'
           ? 'asc'
-          : sorter.order === 'descend'
+          : singleSorter.order === 'descend'
             ? 'desc'
             : undefined,
-      sortBy: sorter?.field,
+      sortBy: singleSorter?.field as string | undefined,
       isBlocked: tableParams.isBlocked,
     });
 
@@ -211,8 +219,8 @@ const UsersPage: FC = () => {
         current: pagination.current,
         pageSize: pagination.pageSize,
       },
-      sortOrder: sorter?.order,
-      sortField: sorter?.field,
+      sortOrder: singleSorter?.order,
+      sortField: singleSorter?.field,
     }));
   };
 
@@ -220,11 +228,20 @@ const UsersPage: FC = () => {
     try {
       await blockUser(id);
 
+      const sortOrder =
+        tableParams.sortOrder === 'ascend'
+          ? 'asc'
+          : tableParams.sortOrder === 'descend'
+            ? 'desc'
+            : undefined;
+
       await fetchUsers({
-        page: tableParams?.pagination?.current - 1,
+        page: tableParams?.pagination?.current
+          ? tableParams?.pagination?.current - 1
+          : 0,
         limit: tableParams?.pagination?.pageSize,
-        sortOrder: tableParams?.sortOrder,
-        sortBy: tableParams?.sortField,
+        sortOrder,
+        sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
     } catch (e) {
@@ -240,11 +257,20 @@ const UsersPage: FC = () => {
     try {
       await unblockUser(id);
 
+      const sortOrder =
+        tableParams.sortOrder === 'ascend'
+          ? 'asc'
+          : tableParams.sortOrder === 'descend'
+            ? 'desc'
+            : undefined;
+
       await fetchUsers({
-        page: tableParams?.pagination?.current - 1,
+        page: tableParams?.pagination?.current
+          ? tableParams?.pagination?.current - 1
+          : 0,
         limit: tableParams?.pagination?.pageSize,
-        sortOrder: tableParams?.sortOrder,
-        sortBy: tableParams?.sortField,
+        sortOrder,
+        sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
     } catch (e) {
@@ -256,16 +282,23 @@ const UsersPage: FC = () => {
     }
   };
 
-  const handleChangeStatusUser = (event) => {
+  const handleChangeStatusUser = (event: RadioChangeEvent) => {
     let statusFilter = event.target.value;
 
     statusFilter = statusFilter === 'all' ? undefined : statusFilter;
 
+    const sortOrder =
+      tableParams.sortOrder === 'ascend'
+        ? 'asc'
+        : tableParams.sortOrder === 'descend'
+          ? 'desc'
+          : undefined;
+
     fetchUsers({
       page: 0,
       limit: tableParams?.pagination?.pageSize,
-      sortOrder: tableParams?.sortOrder,
-      sortBy: tableParams?.sortField,
+      sortOrder,
+      sortBy: tableParams?.sortField as string | undefined,
       isBlocked: statusFilter,
     });
 
@@ -283,11 +316,20 @@ const UsersPage: FC = () => {
     try {
       await deleteUser(id);
 
+      const sortOrder =
+        tableParams.sortOrder === 'ascend'
+          ? 'asc'
+          : tableParams.sortOrder === 'descend'
+            ? 'desc'
+            : undefined;
+
       await fetchUsers({
-        page: tableParams?.pagination?.current - 1,
+        page: tableParams?.pagination?.current
+          ? tableParams?.pagination?.current - 1
+          : 0,
         limit: tableParams?.pagination?.pageSize,
-        sortOrder: tableParams?.sortOrder,
-        sortBy: tableParams?.sortField,
+        sortOrder,
+        sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
     } catch (e) {
@@ -309,7 +351,7 @@ const UsersPage: FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleChangeSelectRoles = (value) => {
+  const handleChangeSelectRoles = (value: Roles[]) => {
     if (value.length < 1) return;
 
     setModalRoleOptions((prevState) => ({
@@ -325,11 +367,20 @@ const UsersPage: FC = () => {
         modalRoleOptions.rolesUser,
       );
 
+      const sortOrder =
+        tableParams.sortOrder === 'ascend'
+          ? 'asc'
+          : tableParams.sortOrder === 'descend'
+            ? 'desc'
+            : undefined;
+
       await fetchUsers({
-        page: tableParams?.pagination?.current - 1,
+        page: tableParams?.pagination?.current
+          ? tableParams?.pagination?.current - 1
+          : 0,
         limit: tableParams?.pagination?.pageSize,
-        sortOrder: tableParams?.sortOrder,
-        sortBy: tableParams?.sortField,
+        sortOrder,
+        sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
     } catch (e) {
