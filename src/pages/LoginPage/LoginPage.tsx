@@ -4,12 +4,13 @@ import { AuthData } from '../../types/authTypes.ts';
 import { Link, useNavigate } from 'react-router';
 import { login } from '../../services/authServices.ts';
 import { useAppDispatch } from '../../store';
-import { setAuth } from '../../store/slices/authSlice.ts';
+import { setAuth, setProfile } from '../../store/slices/authSlice.ts';
 import { tokenManager } from '../../helpers/TokenManager.ts';
 import {
   VALIDATION_INPUTS_MESSAGE,
   VALIDATION_INPUTS_RULES,
 } from '../../constants/validationRules.ts';
+import { getProfile } from '../../services/usersServices.ts';
 
 const LoginPage: FC = () => {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ const LoginPage: FC = () => {
 
       dispatch(setAuth(true));
 
+      await fetchProfile();
+
       navigate('/');
     } catch (e) {
       console.error(e);
@@ -31,6 +34,20 @@ const LoginPage: FC = () => {
         title: 'Ошибка!',
         description: 'Неверные логин или пароль',
         duration: 5,
+      });
+    }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      const response = await getProfile();
+
+      dispatch(setProfile(response.data));
+    } catch (e) {
+      console.error(e);
+      notification.error({
+        title: 'Ошибка!',
+        description: 'Ошибка при получении профиля',
       });
     }
   };

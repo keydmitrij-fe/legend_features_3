@@ -8,11 +8,13 @@ import {
   SmileOutlined,
   UserSwitchOutlined,
 } from '@ant-design/icons';
+import usePermissions from '../../hooks/usePermissions.ts';
 
 const AppSider: FC<SiderProps> = (props) => {
   const { ...rest } = props;
 
   const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const isAdminOrModerator = usePermissions();
 
   return (
     isAuth && (
@@ -44,19 +46,21 @@ const AppSider: FC<SiderProps> = (props) => {
               Профиль
             </Button>
           </NavLink>
-          <NavLink to={'/users'}>
-            <Button
-              icon={<UserSwitchOutlined />}
-              variant={'solid'}
-              color={'primary'}
-              size={'large'}
-              style={{
-                width: '100%',
-              }}
-            >
-              Пользователи
-            </Button>
-          </NavLink>
+          {isAdminOrModerator && (
+            <NavLink to={'/users'}>
+              <Button
+                icon={<UserSwitchOutlined />}
+                variant={'solid'}
+                color={'primary'}
+                size={'large'}
+                style={{
+                  width: '100%',
+                }}
+              >
+                Пользователи
+              </Button>
+            </NavLink>
+          )}
         </Flex>
       </Sider>
     )

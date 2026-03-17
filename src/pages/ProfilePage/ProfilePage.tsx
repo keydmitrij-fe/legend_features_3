@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Button, notification, Table } from 'antd';
-import { getProfile } from '../../services/userServices.ts';
+import { getProfile } from '../../services/usersServices.ts';
 import { ProfileRequest } from '../../types/authTypes.ts';
 import { logout } from '../../services/authServices.ts';
 import { useNavigate } from 'react-router';

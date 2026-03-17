@@ -1,4 +1,4 @@
-import { Flex, Layout } from 'antd';
+import { Flex, Layout, notification } from 'antd';
 import Routers from './components/Routers';
 import AppSider from './components/AppSider';
 import { Content } from 'antd/es/layout/layout';
@@ -9,7 +9,8 @@ import axios from 'axios';
 import { Token } from './types/authTypes.ts';
 import { API_URL } from './api/http.ts';
 import { tokenManager } from './helpers/TokenManager.ts';
-import { setAuth } from './store/slices/authSlice.ts';
+import { setAuth, setProfile } from './store/slices/authSlice.ts';
+import { getProfile } from './services/usersServices.ts';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -28,6 +29,20 @@ function App() {
     localStorage.setItem('token', response.data.refreshToken);
   };
 
+  const fetchProfile = async () => {
+    try {
+      const response = await getProfile();
+
+      dispatch(setProfile(response.data));
+    } catch (e) {
+      console.error(e);
+      notification.error({
+        title: 'Ошибка!',
+        description: 'Ошибка при получении профиля',
+      });
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
 
@@ -36,6 +51,7 @@ function App() {
         setIsLoading(true);
         try {
           await refresh(token);
+          await fetchProfile();
         } catch (e) {
           console.error(e);
           localStorage.clear();
