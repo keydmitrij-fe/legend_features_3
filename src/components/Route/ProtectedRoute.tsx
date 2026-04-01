@@ -1,12 +1,13 @@
 import { Navigate, Outlet } from 'react-router';
-import usePermissions from '../../hooks/usePermissions.ts';
+
+import useIsModeratorOrAdmin from '../../hooks/useIsModeratorOrAdmin';
 
 const ProtectedRoute = () => {
-  if (usePermissions()) {
+  if (useIsModeratorOrAdmin()) {
     return <Outlet />;
-  } else {
-    return <Navigate to={'/'} />;
   }
+
+  return <Navigate to={'/'} />;
 };
 
 export default ProtectedRoute;

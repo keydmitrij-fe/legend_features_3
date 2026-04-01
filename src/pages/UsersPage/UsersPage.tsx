@@ -14,12 +14,12 @@ import {
   TableProps,
   Tag,
 } from 'antd';
-import { Roles, User, UsersFilters } from '../../types/usersTypes.ts';
+import Input, { SearchProps } from 'antd/es/input';
 import { ColumnsType } from 'antd/es/table';
 import { SorterResult } from 'antd/es/table/interface';
-import { Link } from 'react-router';
 import { FC, useEffect, useState } from 'react';
-import Input, { SearchProps } from 'antd/es/input';
+import { Link } from 'react-router';
+
 import {
   blockUser,
   deleteUser,
@@ -27,14 +27,15 @@ import {
   unblockUser,
   updateRightsUser,
 } from '../../services/usersServices.ts';
+import { Roles, User, UsersFilters } from '../../types/usersTypes.ts';
 
 interface TableParams {
   pagination?: TablePaginationConfig;
   sortField?: SorterResult['field'];
-  sortOrder?: SorterResult['order'] | undefined;
+  sortOrder?: SorterResult['order'];
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
   search?: string;
-  isBlocked?: boolean | undefined;
+  isBlocked?: boolean;
 }
 
 interface ModalRoleOptions {
@@ -51,10 +52,9 @@ const UsersPage: FC = () => {
       pageSize: 20,
       total: 0,
     },
-    isBlocked: undefined,
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalRoleOptions, setModalRoleOptions] = useState<ModalRoleOptions>({
     idUser: 0,
     rolesUser: [],
@@ -90,7 +90,7 @@ const UsersPage: FC = () => {
       dataIndex: 'roles',
       render: (_, { roles }) => (
         <Flex gap="small" align="center" wrap>
-          {roles.map((role) => {
+          {roles.map(role => {
             let color = 'green';
             if (role === 'ADMIN') {
               color = 'pink';
@@ -169,15 +169,14 @@ const UsersPage: FC = () => {
       const response = await getUsers(usersFilters);
 
       setUsers(response.data.data);
-      setTableParams((prevState) => ({
+      setTableParams(prevState => ({
         ...prevState,
         pagination: {
           ...prevState.pagination,
           total: response.data.meta.totalAmount,
         },
       }));
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при получении пользователей',
@@ -188,7 +187,7 @@ const UsersPage: FC = () => {
     }
   };
 
-  const onSearch: SearchProps['onSearch'] = (value) => {
+  const onSearch: SearchProps['onSearch'] = value => {
     fetchUsers({ search: value });
   };
 
@@ -212,7 +211,7 @@ const UsersPage: FC = () => {
       isBlocked: tableParams.isBlocked,
     });
 
-    setTableParams((prevState) => ({
+    setTableParams(prevState => ({
       ...prevState,
       pagination: {
         ...prevState.pagination,
@@ -244,8 +243,7 @@ const UsersPage: FC = () => {
         sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при блокировке пользователя',
@@ -273,8 +271,7 @@ const UsersPage: FC = () => {
         sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при разблокировке пользователя',
@@ -302,7 +299,7 @@ const UsersPage: FC = () => {
       isBlocked: statusFilter,
     });
 
-    setTableParams((prevState) => ({
+    setTableParams(prevState => ({
       ...prevState,
       pagination: {
         ...prevState.pagination,
@@ -332,8 +329,7 @@ const UsersPage: FC = () => {
         sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при удалении пользователя',
@@ -354,7 +350,7 @@ const UsersPage: FC = () => {
   const handleChangeSelectRoles = (value: Roles[]) => {
     if (value.length < 1) return;
 
-    setModalRoleOptions((prevState) => ({
+    setModalRoleOptions(prevState => ({
       ...prevState,
       rolesUser: value,
     }));
@@ -383,8 +379,7 @@ const UsersPage: FC = () => {
         sortBy: tableParams?.sortField as string | undefined,
         isBlocked: tableParams?.isBlocked,
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при редактировании ролей пользователя',
@@ -415,7 +410,7 @@ const UsersPage: FC = () => {
       />
       <Table<User>
         columns={columns}
-        rowKey={(record) => record.id}
+        rowKey={record => record.id}
         dataSource={users}
         pagination={tableParams.pagination}
         loading={isLoading}

@@ -1,10 +1,3 @@
-import { FC, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
-import {
-  getUserProfile,
-  updateUserProfile,
-} from '../../services/usersServices.ts';
-import { User, UserRequest } from '../../types/usersTypes.ts';
 import {
   Button,
   Form,
@@ -14,10 +7,20 @@ import {
   Space,
   Spin,
 } from 'antd';
+import { FC, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+
 import {
   VALIDATION_INPUTS_MESSAGE,
   VALIDATION_INPUTS_RULES,
-} from '../../constants/validationRules.ts';
+} from '../../constants/validationRules';
+import getChangedFields from '../../helpers/getChangedFields';
+import isEmptyObject from '../../helpers/isEmptyObject.ts';
+import {
+  getUserProfile,
+  updateUserProfile,
+} from '../../services/usersServices';
+import { User, UserRequest } from '../../types/usersTypes';
 
 type FieldType = {
   username?: string;
@@ -26,6 +29,7 @@ type FieldType = {
 };
 
 const UserPage: FC = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [userProfile, setUserProfile] = useState<User>({
     id: 0,
@@ -36,23 +40,29 @@ const UserPage: FC = () => {
     roles: [],
     phoneNumber: '',
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchUserProfile();
   }, []);
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = async (): Promise<void> => {
     try {
       setIsLoading(true);
       if (id) {
         const response = await getUserProfile(+id);
 
         setUserProfile(response.data);
+
+        form.setFieldsValue({
+          username: response.data.username,
+          email: response.data.email,
+          phoneNumber: response.data.phoneNumber,
+        });
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при получении профиля пользователя',
@@ -62,7 +72,7 @@ const UserPage: FC = () => {
     }
   };
 
-  const updateProfile = async (userRequest: UserRequest) => {
+  const updateProfile = async (userRequest: UserRequest): Promise<void> => {
     try {
       setIsLoading(true);
       if (id) {
@@ -73,8 +83,7 @@ const UserPage: FC = () => {
         title: 'Успех',
         description: 'Профиль обновлён',
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при редактировании профиля пользователя',
@@ -84,21 +93,22 @@ const UserPage: FC = () => {
     }
   };
 
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    const { username, email, phoneNumber } = values;
+  const handleFormSubmit: FormProps<FieldType>['onFinish'] = async values => {
+    const changedFields = getChangedFields(
+      {
+        username: userProfile.username,
+        email: userProfile.email,
+        phoneNumber: userProfile.phoneNumber,
+      },
+      values,
+    );
 
-    if (email === userProfile.email) {
-      updateProfile({
-        username,
-        phoneNumber,
-      })
-        .then(() => fetchUserProfile())
-        .then(() => setIsDisabled(true));
-    } else {
-      updateProfile(values)
-        .then(() => fetchUserProfile())
-        .then(() => setIsDisabled(true));
+    if (!isEmptyObject(changedFields)) {
+      await updateProfile(changedFields);
+      await fetchUserProfile();
     }
+
+    setIsDisabled(true);
   };
 
   if (isLoading) {
@@ -107,8 +117,9 @@ const UserPage: FC = () => {
 
   return (
     <Form
+      form={form}
       name="profile"
-      onFinish={onFinish}
+      onFinish={handleFormSubmit}
       layout={'vertical'}
       disabled={isDisabled}
     >
@@ -133,7 +144,6 @@ const UserPage: FC = () => {
             message: VALIDATION_INPUTS_MESSAGE.USERNAME.REGEX,
           },
         ]}
-        initialValue={userProfile.username}
       >
         <Input />
       </Form.Item>
@@ -151,7 +161,6 @@ const UserPage: FC = () => {
             message: VALIDATION_INPUTS_MESSAGE.EMAIL.REGEX,
           },
         ]}
-        initialValue={userProfile.email}
       >
         <Input />
       </Form.Item>
@@ -165,7 +174,6 @@ const UserPage: FC = () => {
             message: VALIDATION_INPUTS_MESSAGE.PHONE_NUMBER.REGEX,
           },
         ]}
-        initialValue={userProfile.phoneNumber}
       >
         <Input />
       </Form.Item>
@@ -189,11 +197,14 @@ const UserPage: FC = () => {
         </Form.Item>
 
         <Form.Item label={null}>
-          <Link to={'/users'}>
-            <Button type="primary" htmlType="button" disabled={false}>
-              Вернуться
-            </Button>
-          </Link>
+          <Button
+            type="primary"
+            htmlType="button"
+            disabled={false}
+            onClick={() => navigate('/users')}
+          >
+            Вернуться
+          </Button>
         </Form.Item>
       </Space>
     </Form>

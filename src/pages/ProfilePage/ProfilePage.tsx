@@ -1,12 +1,13 @@
-import { FC, useEffect, useState } from 'react';
 import { Button, notification, Table } from 'antd';
-import { getProfile } from '../../services/usersServices.ts';
-import { ProfileRequest } from '../../types/authTypes.ts';
-import { logout } from '../../services/authServices.ts';
+import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+
 import { tokenManager } from '../../helpers/TokenManager.ts';
+import { logout } from '../../services/authServices.ts';
+import { getProfile } from '../../services/usersServices.ts';
 import { useAppDispatch } from '../../store';
 import { setAuth } from '../../store/slices/authSlice.ts';
+import { ProfileRequest } from '../../types/authTypes.ts';
 
 const ProfilePage: FC = () => {
   const [profile, setProfile] = useState<ProfileRequest>({
@@ -63,8 +64,7 @@ const ProfilePage: FC = () => {
       localStorage.clear();
       tokenManager.clearToken();
       navigate('/login');
-    } catch (e) {
-      console.error(e);
+    } catch {
       notification.error({
         title: 'Ошибка!',
         description: 'Ошибка при обнулении токенов',
