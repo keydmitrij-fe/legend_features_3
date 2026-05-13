@@ -3,12 +3,16 @@ import { getTodos } from '../services/todoServices';
 import { TodoInfoFilter } from '../types/todoTypes';
 
 export function useTodos(filter: TodoInfoFilter) {
-  const fetcher = getTodos.bind(null, filter);
-  const { data, error, isLoading } = useSWR(`/todos`, fetcher);
+  const { data, error, isLoading, mutate } = useSWR(
+    [`/todos`, filter],
+    () => getTodos(filter),
+    { refreshInterval: 5000 },
+  );
 
   return {
     todos: data,
     isLoading,
     isError: error,
+    mutate,
   };
 }

@@ -20,24 +20,27 @@ import {
   VALIDATION_INPUTS_MESSAGE,
   VALIDATION_INPUTS_RULES,
 } from '../../constants/validationRules.ts';
+import { useSWRConfig } from 'swr';
 
 interface TodoItemProps {
   id: number;
   title: string;
   isDone: boolean;
-  updateTodo: () => Promise<void>;
 }
 
 const TodoItem: FC<TodoItemProps> = (props) => {
-  const { id, title, isDone, updateTodo } = props;
+  const { id, title, isDone } = props;
+  const { mutate } = useSWRConfig();
+
+  const invalidateTodos = () =>
+    mutate((key) => Array.isArray(key) && key[0] === '/todos');
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const handleEditTodo: FormProps['onFinish'] = async (values: TodoRequest) => {
     try {
       await editTodo(id, { title: values.title });
-      await updateTodo();
-
+      invalidateTodos();
       setIsEdit(false);
     } catch (e) {
       console.error(e);
@@ -53,7 +56,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
   ) => {
     try {
       await editTodo(id, { isDone: event.target.checked });
-      await updateTodo();
+      invalidateTodos();
     } catch (e) {
       console.error(e);
       notification.error({
@@ -66,7 +69,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
   const handleDeleteTodo: PopconfirmProps['onConfirm'] = async () => {
     try {
       await deleteTodo(id);
-      await updateTodo();
+      invalidateTodos();
     } catch (e) {
       console.error(e);
       notification.error({

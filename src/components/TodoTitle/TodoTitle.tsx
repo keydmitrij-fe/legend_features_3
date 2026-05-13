@@ -7,27 +7,24 @@ import {
   notification,
   Space,
 } from 'antd';
-import { FC } from 'react';
 import { Todo } from '../../types/todoTypes.ts';
 import { addTodo } from '../../services/todoServices.ts';
 import {
   VALIDATION_INPUTS_MESSAGE,
   VALIDATION_INPUTS_RULES,
 } from '../../constants/validationRules.ts';
+import { mutate } from 'swr';
 
-type TodoTitleProps = {
-  updateTodo: () => Promise<void>;
-};
-
-const TodoTitle: FC<TodoTitleProps> = (props) => {
-  const { updateTodo } = props;
+const TodoTitle = () => {
+  const invalidateTodos = () =>
+    mutate((key) => Array.isArray(key) && key[0] === '/todos');
 
   const onFinish: FormProps['onFinish'] = async (
     values: Pick<Todo, 'title'>,
   ) => {
     try {
       await addTodo(values.title);
-      await updateTodo();
+      invalidateTodos();
     } catch (e) {
       console.error(e);
       notification.error({

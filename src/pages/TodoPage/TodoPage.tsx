@@ -1,59 +1,47 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useState } from 'react';
 import TodoTitle from '../../components/TodoTitle';
 import TodoList from '../../components/TodoList';
 import TodoStatusFilter from '../../components/TodoStatusFilter';
 import { Content } from 'antd/es/layout/layout';
 import { Layout, notification } from 'antd';
-import { Todo, TodoInfoFilter } from '../../types/todoTypes.ts';
-import { getTodos } from '../../services/todoServices.ts';
+import { TodoInfoFilter } from '../../types/todoTypes.ts';
+import { useTodos } from '../../hooks/useTodos.ts';
+import { Spin } from 'antd';
 
 const TodoPage: FC = () => {
-  const [todoItems, setTodoItems] = useState<Todo[]>([]);
-  const [todoInfoStatuses, setTodoInfoStatuses] = useState({
-    all: 0,
-    completed: 0,
-    inWork: 0,
-  });
   const [activeInfoStatus, setActiveInfoStatus] =
     useState<TodoInfoFilter>('all');
 
-  useEffect(() => {
-    updateTodo();
+  //   } catch (e) {
+  //     console.error(e);
+  //     notification.error({
+  //       title: 'Ошибка!',
+  //       description: 'Ошибка при загрузке списка задач',
+  //     });
+  //   }
 
-    const refreshInterval = setInterval(updateTodo, 5000);
+  const { todos, isError } = useTodos(activeInfoStatus);
 
-    return () => {
-      clearInterval(refreshInterval);
-    };
-  }, [activeInfoStatus]);
-
-  const updateTodo = async () => {
-    try {
-      const response = await getTodos(activeInfoStatus);
-
-      setTodoItems(response.data.data);
-
-      if (response.data.info) {
-        setTodoInfoStatuses(response.data.info);
-      }
-    } catch (e) {
-      console.error(e);
-      notification.error({
-        title: 'Ошибка!',
-        description: 'Ошибка при загрузке списка задач',
-      });
-    }
-  };
+  if (isError) {
+    notification.error({
+      title: 'Ошибка!',
+      description: 'Ошибка при загрузке списка задач',
+    });
+  }
 
   return (
     <Layout>
       <Content>
-        <TodoTitle updateTodo={updateTodo} />
+        <TodoTitle />
         <TodoStatusFilter
-          todoInfoStatuses={todoInfoStatuses}
+          todoInfoStatuses={
+            todos?.data.info
+              ? todos.data.info
+              : { all: 0, completed: 0, inWork: 0 }
+          }
           setActiveInfoStatus={setActiveInfoStatus}
         />
-        <TodoList todoItems={todoItems} updateTodo={updateTodo} />
+        {todos ? <TodoList todoItems={todos.data.data} /> : <Spin />}
       </Content>
     </Layout>
   );
