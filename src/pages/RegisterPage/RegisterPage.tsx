@@ -1,15 +1,12 @@
 import { FC, useState } from 'react';
-import { Button, Form, FormProps, Input, notification, Typography } from 'antd';
+import { Button, Form, notification, Typography } from 'antd';
 import { UserRegistration } from '../../types/authTypes.ts';
 import { register } from '../../services/authServices.ts';
 import { Link } from 'react-router';
-import {
-  VALIDATION_INPUTS_MESSAGE,
-  VALIDATION_INPUTS_RULES,
-} from '../../constants/validationRules.ts';
-import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import registerSchema from '../../schemas/register.ts';
+import RHFInput from '../../components/Form/RHFInput.tsx';
 export interface SingUpFormFields extends UserRegistration {
   confirmPassword: UserRegistration['password'];
 }
@@ -48,154 +45,57 @@ const RegisterPage: FC = () => {
   }
 
   return (
-    <form style={{ maxWidth: 420 }} onSubmit={handleSubmit(handleUserSignUp)}>
-      <Form.Item>
-        <Typography.Title level={2}>Регистрация</Typography.Title>
-      </Form.Item>
+    <Form
+      name="basic"
+      style={{ maxWidth: 420 }}
+      onFinish={handleSubmit(handleUserSignUp)}
+      autoComplete="off"
+      layout={'vertical'}
+      size={'large'}
+    >
+      <Typography.Title level={2}>Регистрация</Typography.Title>
 
-      <Form.Item
-        label="Имя пользователя"
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
-          },
-          {
-            min: VALIDATION_INPUTS_RULES.USERNAME.MIN_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.USERNAME.MIN_LENGTH,
-          },
-          {
-            max: VALIDATION_INPUTS_RULES.USERNAME.MAX_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.USERNAME.MAX_LENGTH,
-          },
-          {
-            pattern: VALIDATION_INPUTS_RULES.USERNAME.REGEX,
-            message: VALIDATION_INPUTS_MESSAGE.USERNAME.REGEX,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+      <RHFInput name="username" label="Имя пользователя" control={control} />
 
-      <Form.Item
-        label="Логин"
-        name="login"
-        rules={[
-          {
-            required: true,
-            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
-          },
-          {
-            min: VALIDATION_INPUTS_RULES.LOGIN.MIN_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.LOGIN.MIN_LENGTH,
-          },
-          {
-            max: VALIDATION_INPUTS_RULES.LOGIN.MAX_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.LOGIN.MAX_LENGTH,
-          },
-          {
-            pattern: VALIDATION_INPUTS_RULES.LOGIN.REGEX,
-            message: VALIDATION_INPUTS_MESSAGE.LOGIN.REGEX,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+      <RHFInput name="login" label="Логин" control={control} />
 
-      <Form.Item
-        label="Пароль"
+      <RHFInput
         name="password"
-        rules={[
-          {
-            required: true,
-            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
-          },
-          {
-            min: VALIDATION_INPUTS_RULES.PASSWORD.MIN_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MIN_LENGTH,
-          },
-          {
-            max: VALIDATION_INPUTS_RULES.PASSWORD.MAX_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MAX_LENGTH,
-          },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+        label="Пароль"
+        control={control}
+        type="password"
+      />
 
-      <Form.Item
-        label="Повторите пароль"
+      <RHFInput
         name="confirmPassword"
-        dependencies={['password']}
-        rules={[
-          {
-            required: true,
-            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
-          },
-          {
-            min: VALIDATION_INPUTS_RULES.PASSWORD.MIN_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MIN_LENGTH,
-          },
-          {
-            max: VALIDATION_INPUTS_RULES.PASSWORD.MAX_LENGTH,
-            message: VALIDATION_INPUTS_MESSAGE.PASSWORD.MAX_LENGTH,
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(
-                new Error('Новый пароль, который вы ввели, не совпадает!'),
-              );
-            },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+        label="Повторите пароль"
+        control={control}
+        type="password"
+      />
 
-      <Form.Item
-        label="Почтовый адрес"
+      <RHFInput
         name="email"
-        rules={[
-          {
-            required: true,
-            message: VALIDATION_INPUTS_MESSAGE.REQUIRED,
-          },
-          {
-            pattern: VALIDATION_INPUTS_RULES.EMAIL.REGEX,
-            message: VALIDATION_INPUTS_MESSAGE.EMAIL.REGEX,
-          },
-        ]}
-      >
-        <Input type={'email'} />
-      </Form.Item>
+        label="Почтовый адрес"
+        control={control}
+        type="email"
+      />
 
-      <Form.Item
-        label="Телефон"
+      <RHFInput
         name="phoneNumber"
-        rules={[
-          {
-            pattern: VALIDATION_INPUTS_RULES.PHONE_NUMBER.REGEX,
-            message: VALIDATION_INPUTS_MESSAGE.PHONE_NUMBER.REGEX,
-          },
-        ]}
-      >
-        <Input type={'tel'} />
-      </Form.Item>
+        label="Телефон"
+        control={control}
+        type="tel"
+      />
 
       <Form.Item label={null}>
         <Button type="primary" htmlType="submit">
           Зарегистрироваться
         </Button>
       </Form.Item>
-
       <Form.Item label={null}>
         <Link to={'/login'}>Войти</Link>
       </Form.Item>
-    </form>
+    </Form>
   );
 };
 

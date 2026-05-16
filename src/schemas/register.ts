@@ -24,7 +24,7 @@ const registerSchema = z
       )
       .regex(
         VALIDATION_INPUTS_RULES.USERNAME.REGEX,
-        VALIDATION_INPUTS_MESSAGE.USERNAME.MAX_LENGTH,
+        VALIDATION_INPUTS_MESSAGE.USERNAME.REGEX,
       ),
     login: z
       .string({
@@ -43,7 +43,7 @@ const registerSchema = z
       )
       .regex(
         VALIDATION_INPUTS_RULES.LOGIN.REGEX,
-        VALIDATION_INPUTS_MESSAGE.LOGIN.MAX_LENGTH,
+        VALIDATION_INPUTS_MESSAGE.LOGIN.REGEX,
       ),
     password: z
       .string({
@@ -87,7 +87,7 @@ const registerSchema = z
         VALIDATION_INPUTS_MESSAGE.EMAIL.REGEX,
       ),
     phoneNumber: z
-      .string()
+      .string(VALIDATION_INPUTS_MESSAGE.REQUIRED)
       .regex(
         VALIDATION_INPUTS_RULES.PHONE_NUMBER.REGEX,
         VALIDATION_INPUTS_MESSAGE.PHONE_NUMBER.REGEX,
