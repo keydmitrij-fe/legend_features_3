@@ -18,12 +18,12 @@ const RHFInput = <T extends FieldValues>({
 
   return (
     <Form.Item
-      label={label}
+      label={<label htmlFor={String(name)}>{label}</label>}
+      // label={label}
       validateStatus={fieldState.error ? 'error' : ''}
-      name={String(name)}
       help={fieldState.error?.message}
     >
-      <Input {...field} type={type} />
+      <Input {...field} type={type} id={String(name)} />
     </Form.Item>
   );
 };
