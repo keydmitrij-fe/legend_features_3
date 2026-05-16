@@ -7,15 +7,25 @@ import {
   VALIDATION_INPUTS_MESSAGE,
   VALIDATION_INPUTS_RULES,
 } from '../../constants/validationRules.ts';
+import { useForm, type SubmitHandler, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import registerSchema from '../../schemas/register.ts';
+export interface SingUpFormFields extends UserRegistration {
+  confirmPassword: UserRegistration['password'];
+}
 
 const RegisterPage: FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
-  const onFinish: FormProps['onFinish'] = async (
-    userRegistration: UserRegistration,
+  const { handleSubmit, control } = useForm<SingUpFormFields>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const handleUserSignUp: SubmitHandler<UserRegistration> = async (
+    userData,
   ) => {
     try {
-      await register(userRegistration);
+      await register(userData);
 
       setIsRegistered(true);
     } catch {
@@ -38,14 +48,7 @@ const RegisterPage: FC = () => {
   }
 
   return (
-    <Form
-      name="basic"
-      style={{ maxWidth: 420 }}
-      onFinish={onFinish}
-      autoComplete="off"
-      layout={'vertical'}
-      size={'large'}
-    >
+    <form style={{ maxWidth: 420 }} onSubmit={handleSubmit(handleUserSignUp)}>
       <Form.Item>
         <Typography.Title level={2}>Регистрация</Typography.Title>
       </Form.Item>
@@ -192,7 +195,7 @@ const RegisterPage: FC = () => {
       <Form.Item label={null}>
         <Link to={'/login'}>Войти</Link>
       </Form.Item>
-    </Form>
+    </form>
   );
 };
 
