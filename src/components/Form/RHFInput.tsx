@@ -19,7 +19,6 @@ const RHFInput = <T extends FieldValues>({
   return (
     <Form.Item
       label={<label htmlFor={String(name)}>{label}</label>}
-      // label={label}
       validateStatus={fieldState.error ? 'error' : ''}
       help={fieldState.error?.message}
     >
